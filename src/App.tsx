@@ -6,7 +6,7 @@ import { PasswordFace } from "./components/PasswordFace";
 import { RunawayButton } from "./components/RunawayButton";
 import { ThemeToggle } from "./components/ThemeToggle";
 import { TiltCard } from "./components/TiltCard";
-import { IslandPhone, type PhoneText } from "./components/dynamic-island/IslandPhone";
+import { Battery, IslandPhone, Signal, type PhoneText } from "./components/dynamic-island/IslandPhone";
 import { CardTransition, type Place } from "./components/card-transition/CardTransition";
 import { locale, useLang, type Lang } from "./i18n";
 import "./gallery.css";
@@ -63,12 +63,12 @@ const CardsDemo = ({ lang, animate = true }: { lang: Lang; animate?: boolean }) 
 );
 
 const ITEMS: { id: string; name: L; about: L; short: string; file: string; demo: (lang: Lang) => ReactNode }[] = [
-  { id: "card", name: { ru: "Карточка → страница", en: "Card → page" }, about: { ru: "Картинка и заголовок перелетают на новую страницу. View Transitions API, без библиотек.", en: "The image and title fly into the new page. View Transitions API, no libraries." }, short: "jIj0fpT2fFY", file: "card-transition", demo: (lang) => <div className="iphone-frame island-scale"><CardsDemo lang={lang} /></div> },
+  { id: "card", name: { ru: "Карточка → страница", en: "Card → page" }, about: { ru: "Картинка и заголовок перелетают на новую страницу. View Transitions API, без библиотек.", en: "The image and title fly into the new page. View Transitions API, no libraries." }, short: "jIj0fpT2fFY", file: "card-transition", demo: (lang) => <Phone><CardsDemo lang={lang} /></Phone> },
   { id: "island", name: { ru: "Dynamic Island", en: "Dynamic Island" }, about: { ru: "Капсула превращается в таймер, плеер и звонок. Пружина — CSS linear().", en: "The pill morphs into a timer, a player and a call. The spring is CSS linear()." }, short: "BJfNxnVbyAA", file: "dynamic-island", demo: (lang) => <div className="iphone-frame island-scale"><IslandPhone text={ISLAND[lang]} /></div> },
   { id: "range-picker", name: { ru: "Выбор диапазона дат", en: "Date range picker" }, about: { ru: "Два месяца, подсветка при наведении, лента месяцев, пресеты.", en: "Two months, hover preview, sliding months, presets." }, short: "qNPflv57UsI", file: "range-picker", demo: (lang) => <RangeDemo lang={lang} /> },
-  { id: "magnetic", name: { ru: "Магнитная кнопка", en: "Magnetic button" }, about: { ru: "Тянется за курсором и пружинит обратно.", en: "Follows the cursor and springs back." }, short: "38HDRVJWjA8", file: "MagneticButton.tsx", demo: (lang) => <MagneticButton>{lang === "ru" ? "Наведи на меня" : "Hover me"}</MagneticButton> },
-  { id: "tilt", name: { ru: "3D-карточка", en: "3D tilt card" }, about: { ru: "Наклоняется за курсором, perspective + rotate.", en: "Tilts after the cursor with perspective and rotate." }, short: "_QfrxuaAH7I", file: "TiltCard.tsx", demo: (lang) => <TiltCard><div className="tilt-face"><b>NeuroPilot</b><span>{lang === "ru" ? "Наведи и поводи" : "Hover and move"}</span></div></TiltCard> },
-  { id: "password", name: { ru: "Поле пароля с лицом", en: "Password field with a face" }, about: { ru: "Лицо пугается слабого пароля и улыбается надёжному.", en: "The face panics at weak passwords and smiles at strong ones." }, short: "XY2tdBYOjA0", file: "PasswordFace.tsx", demo: (lang) => <PasswordFace label={lang === "ru" ? "Пароль" : "Password"} hint={lang === "ru" ? "Попробуй 1234" : "Try 1234"} /> },
+  { id: "magnetic", name: { ru: "Магнитная кнопка", en: "Magnetic button" }, about: { ru: "Тянется за курсором и пружинит обратно.", en: "Follows the cursor and springs back." }, short: "38HDRVJWjA8", file: "MagneticButton.tsx", demo: (lang) => <Duel lang={lang} /> },
+  { id: "tilt", name: { ru: "3D-карточка", en: "3D tilt card" }, about: { ru: "Наклоняется за курсором, perspective + rotate.", en: "Tilts after the cursor with perspective and rotate." }, short: "_QfrxuaAH7I", file: "TiltCard.tsx", demo: (lang) => <TiltCard title="3D Card" sub={lang === "ru" ? "Наведи и поводи" : "Hover and move"} /> },
+  { id: "password", name: { ru: "Поле пароля с лицом", en: "Password field with a face" }, about: { ru: "Лицо пугается слабого пароля и улыбается надёжному.", en: "The face panics at weak passwords and smiles at strong ones." }, short: "XY2tdBYOjA0", file: "PasswordFace.tsx", demo: (lang) => <PasswordFace t={PW[lang]} /> },
   { id: "toggle", name: { ru: "Переключатель день/ночь", en: "Day/night toggle" }, about: { ru: "Солнце становится луной одной внутренней тенью.", en: "The sun becomes a moon with one inset shadow." }, short: "HoWS3tF59pc", file: "ThemeToggle.tsx", demo: (lang) => <ToggleDemo lang={lang} /> },
   { id: "runaway", name: { ru: "Убегающая кнопка", en: "Runaway button" }, about: { ru: "Кнопка «Подписаться», которую нельзя нажать.", en: "A Subscribe button you can't click." }, short: "L5WUOrv_Ojs", file: "RunawayButton.tsx", demo: (lang) => <RunawayButton>{lang === "ru" ? "Подписаться" : "Subscribe"}</RunawayButton> },
 ];
@@ -94,12 +94,46 @@ function RangeDemo({ lang }: { lang: Lang }) {
 
 function ToggleDemo({ lang }: { lang: Lang }) {
   const [night, setNight] = useState(false);
+  return <ThemeToggle checked={night} onChange={setNight} labels={lang === "ru" ? ["День", "Ночь"] : ["Day", "Night"]} />;
+}
+
+const PW: Record<Lang, { placeholder: string; empty: string; moods: string[]; checks: string[] }> = {
+  ru: { placeholder: "Попробуй 1234", empty: "Введи пароль", moods: ["Ужас", "Слабо", "Сойдёт", "Надёжно"], checks: ["Длина от 8", "Длина от 12", "Aa — разный регистр", "Цифры", "Символы !@#"] },
+  en: { placeholder: "Try 1234", empty: "Type a password", moods: ["Awful", "Weak", "Okay", "Strong"], checks: ["8+ characters", "12+ characters", "Aa — mixed case", "Digits", "Symbols !@#"] },
+};
+
+/** Дуэль из шортса: обычная кнопка против магнитной, считаем попадания. */
+function Duel({ lang }: { lang: Lang }) {
+  const [n, setN] = useState([0, 0]);
+  const hit = (i: number) => setN((v) => v.map((x, j) => (j === i ? x + 1 : x)));
+  const L = lang === "ru" ? { label: "Подписаться", tags: ["обычная", "магнитная"], hint: "Жми быстро в обе" } : { label: "Subscribe", tags: ["regular", "magnetic"], hint: "Click both fast" };
   return (
-    <div className={`toggle-stage ${night ? "night" : ""}`}>
-      <ThemeToggle checked={night} onChange={setNight} label={lang === "ru" ? "Тёмная тема" : "Dark mode"} />
+    <div className="duel">
+      {[0, 1].map((i) => (
+        <div key={i} className="duel-side" style={{ order: i * 2 }}>
+          <div className="duel-head">
+            <span className={`duel-tag ${i ? "hot" : ""}`}>{L.tags[i]}</span>
+            <b className="duel-count">{n[i]}</b>
+          </div>
+          <MagneticButton flat={i === 0} onClick={() => hit(i)}>{L.label}</MagneticButton>
+        </div>
+      ))}
+      <span className="duel-vs" style={{ order: 1 }}>VS</span>
     </div>
   );
 }
+
+/** Корпус iPhone 15 Pro: остров, строка статуса и полоска «домой»; контент — только в безопасной зоне. */
+const Phone = ({ children }: { children: ReactNode }) => (
+  <div className="phone-scale">
+    <div className="phone">
+      <div className="phone-status" aria-hidden="true"><span>9:41</span><span className="phone-icons"><Signal /><Battery /></span></div>
+      <div className="phone-island" aria-hidden="true" />
+      <div className="phone-safe">{children}</div>
+      <i className="phone-home" aria-hidden="true" />
+    </div>
+  </div>
+);
 
 export function App() {
   const [lang, setLang] = useLang();

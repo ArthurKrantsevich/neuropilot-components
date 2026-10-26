@@ -39,12 +39,12 @@ export function IslandPhone({ text }: { text: PhoneText }) {
   );
 }
 
-const Signal = () => (
+export const Signal = () => (
   <svg width="18" height="12" viewBox="0 0 18 12">
     {[0, 1, 2, 3].map((i) => <rect key={i} x={i * 5} y={9 - i * 3} width="3" height={3 + i * 3} rx="1" fill="currentColor" />)}
   </svg>
 );
-const Battery = () => (
+export const Battery = () => (
   <svg width="27" height="13" viewBox="0 0 27 13">
     <rect x="0.5" y="0.5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".4" />
     <rect x="2" y="2" width="20" height="9" rx="2" fill="currentColor" />
