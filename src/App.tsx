@@ -6,6 +6,7 @@ import { PasswordFace } from "./components/PasswordFace";
 import { RunawayButton } from "./components/RunawayButton";
 import { ThemeToggle } from "./components/ThemeToggle";
 import { TiltCard } from "./components/TiltCard";
+import { IslandPhone, type PhoneText } from "./components/dynamic-island/IslandPhone";
 import { locale, useLang, type Lang } from "./i18n";
 import "./gallery.css";
 
@@ -26,7 +27,13 @@ const G = {
   code: { ru: "Код", en: "Code" },
 } satisfies Record<string, L>;
 
+const ISLAND: Record<Lang, PhoneText> = {
+  ru: { title: "Dynamic Island", lead: "Одна капсула: ширина, высота и скругление на пружине.", modes: { timer: "Таймер", music: "Музыка", call: "Звонок" }, hint: "Нажми на остров, чтобы свернуть", calling: "Входящий вызов", caller: "Аня", song: "Северное сияние", artist: "NeuroPilot" },
+  en: { title: "Dynamic Island", lead: "One pill: width, height and radius on a spring.", modes: { timer: "Timer", music: "Music", call: "Call" }, hint: "Tap the island to collapse", calling: "Incoming call", caller: "Anna", song: "Northern Lights", artist: "NeuroPilot" },
+};
+
 const ITEMS: { id: string; name: L; about: L; short: string; file: string; demo: (lang: Lang) => ReactNode }[] = [
+  { id: "island", name: { ru: "Dynamic Island", en: "Dynamic Island" }, about: { ru: "Капсула превращается в таймер, плеер и звонок. Пружина — CSS linear().", en: "The pill morphs into a timer, a player and a call. The spring is CSS linear()." }, short: "BJfNxnVbyAA", file: "dynamic-island", demo: (lang) => <div className="iphone-frame island-scale"><IslandPhone text={ISLAND[lang]} /></div> },
   { id: "range-picker", name: { ru: "Выбор диапазона дат", en: "Date range picker" }, about: { ru: "Два месяца, подсветка при наведении, лента месяцев, пресеты.", en: "Two months, hover preview, sliding months, presets." }, short: "qNPflv57UsI", file: "range-picker", demo: (lang) => <RangeDemo lang={lang} /> },
   { id: "magnetic", name: { ru: "Магнитная кнопка", en: "Magnetic button" }, about: { ru: "Тянется за курсором и пружинит обратно.", en: "Follows the cursor and springs back." }, short: "38HDRVJWjA8", file: "MagneticButton.tsx", demo: (lang) => <MagneticButton>{lang === "ru" ? "Наведи на меня" : "Hover me"}</MagneticButton> },
   { id: "tilt", name: { ru: "3D-карточка", en: "3D tilt card" }, about: { ru: "Наклоняется за курсором, perspective + rotate.", en: "Tilts after the cursor with perspective and rotate." }, short: "_QfrxuaAH7I", file: "TiltCard.tsx", demo: (lang) => <TiltCard><div className="tilt-face"><b>NeuroPilot</b><span>{lang === "ru" ? "Наведи и поводи" : "Hover and move"}</span></div></TiltCard> },
@@ -65,6 +72,9 @@ function ToggleDemo({ lang }: { lang: Lang }) {
 
 export function App() {
   const [lang, setLang] = useLang();
+  // ?rec=island — экран телефона во всё окно для записи шортса
+  // &z=2 — увеличение для чёткой записи (скринкаст пишет в CSS-пикселях)
+  if (q.get("rec") === "island") return <div style={{ zoom: Number(q.get("z") ?? 1) }}><IslandPhone text={ISLAND[lang]} /></div>;
   const repo = "https://github.com/ArthurKrantsevich/neuropilot-components/tree/main/src/components/";
   return (
     <div className="page">

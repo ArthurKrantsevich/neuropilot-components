@@ -61,3 +61,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .toggle.night .stars { opacity: 1; }
 
 @media (max-width: 760px) { .top { flex-direction: column; } .runaway-area { padding: 80px 40px; } }
+
+/* Dynamic Island: телефон 393×852 в галерее уменьшен */
+.island-scale { zoom: 0.62; }
+body:has(> #root > .iphone) { background: #000; }

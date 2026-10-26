@@ -6,6 +6,7 @@ React components from the [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot) Sho
 
 | Component | Short | Code |
 |---|---|---|
+| Dynamic Island — one pill morphs into a timer, a player and a call; spring via CSS `linear()` | [▶](https://youtube.com/shorts/BJfNxnVbyAA) | [`dynamic-island/`](src/components/dynamic-island) |
 | Date range picker — two months, hover preview, sliding months, presets | [▶](https://youtube.com/shorts/qNPflv57UsI) | [`range-picker/`](src/components/range-picker) |
 | Magnetic button — follows the cursor, springs back | [▶](https://youtube.com/shorts/38HDRVJWjA8) | [`MagneticButton.tsx`](src/components/MagneticButton.tsx) |
 | 3D tilt card | [▶](https://youtube.com/shorts/_QfrxuaAH7I) | [`TiltCard.tsx`](src/components/TiltCard.tsx) |
@@ -30,6 +31,20 @@ const [range, setRange] = useState<Range>({ start: null, end: null });
 - Presets: today, 7 days, 30 days, this month, last month. One month on narrow screens.
 - `lang="ru" | "en"` — month names via `Intl.DateTimeFormat`, the week starts on Monday in RU and Sunday in EN.
 
+### Dynamic Island
+
+```tsx
+import { DynamicIsland, type IslandMode } from "./components/dynamic-island/DynamicIsland";
+
+const [mode, setMode] = useState<IslandMode>("idle"); // "idle" | "timer" | "music" | "call"
+<DynamicIsland mode={mode} text={{ calling: "Incoming call", caller: "Anna", song: "Northern Lights", artist: "NeuroPilot" }} onClose={() => setMode("idle")} />
+```
+
+- The whole morph is three properties on one element: `width`, `height`, `border-radius`, each mode just sets `--w`, `--h`, `--r`.
+- The spring is a CSS `linear()` easing — a damped spring sampled into 25 points. No JavaScript animation.
+- Content remounts per mode (`key={mode}`) and fades in out of a blur, 0.18 s after the shape.
+- `IslandPhone` is a 393×852 pt iPhone 15 Pro screen with the island at the camera, a status bar and the 59/34 pt safe areas.
+
 ![Gallery](docs/gallery.png)
 
 ### Run
@@ -47,6 +62,7 @@ Vite + React 19 + TypeScript. MIT.
 
 React-компоненты из шортсов канала [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot) — без библиотек, каждый в одном файле или папке, можно просто скопировать. Живое демо со всеми компонентами (RU/EN): https://arthurkrantsevich.github.io/neuropilot-components/
 
+- **Dynamic Island** — одна чёрная капсула превращается в таймер, плеер и звонок: меняются только ширина, высота и скругление, пружина — CSS `linear()`.
 - **Выбор диапазона дат** — два месяца рядом, подсветка диапазона при наведении через границу месяцев, лента месяцев листается целиком, пресеты, один месяц на телефоне.
 - **Магнитная кнопка**, **3D-карточка**, **поле пароля с лицом**, **переключатель день/ночь**, **убегающая кнопка «Подписаться»**.
 
