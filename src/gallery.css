@@ -1,0 +1,63 @@
+/* Галерея компонентов: страница и демо-стили. Стили самих компонентов — рядом с ними. */
+:root { --bg: #f3f1ee; --ink: #1b1a22; --muted: #77737f; --line: #ebe8f0; --accent: oklch(56% 0.21 282); color-scheme: light; }
+* { box-sizing: border-box; }
+html, body, #root { margin: 0; min-height: 100%; }
+body { background: var(--bg); color: var(--ink); font: 400 15px/1.45 "Inter", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.page { max-width: 1000px; margin: 0 auto; padding: 40px 20px 80px; display: grid; gap: 22px; }
+.top { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
+.top h1 { margin: 0; font-size: 34px; letter-spacing: -0.02em; }
+.top p { margin: 6px 0 0; color: var(--muted); max-width: 560px; }
+.seg { display: inline-flex; padding: 4px; border-radius: 12px; background: #e8e5ef; }
+.seg button { border: 0; background: none; padding: 6px 12px; border-radius: 9px; font-weight: 700; font-size: 13px; color: var(--muted); }
+.seg button[aria-checked="true"] { background: #fff; color: var(--ink); box-shadow: 0 1px 3px rgb(0 0 0 / 0.12); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips a { text-decoration: none; color: var(--ink); background: #fff; border: 1px solid var(--line); padding: 7px 14px; border-radius: 999px; font-weight: 600; font-size: 14px; }
+.chips a:hover { border-color: var(--accent); color: var(--accent); }
+.item { background: #fff; border-radius: 24px; padding: 22px 24px; display: grid; gap: 18px; box-shadow: 0 1px 2px rgb(30 20 60 / 0.06), 0 12px 32px rgb(30 20 60 / 0.06); scroll-margin-top: 20px; }
+.item-head { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
+.item h2 { margin: 0; font-size: 22px; letter-spacing: -0.01em; }
+.item p { margin: 4px 0 0; color: var(--muted); }
+.links { display: flex; gap: 14px; }
+.links a { color: var(--accent); font-weight: 700; text-decoration: none; white-space: nowrap; }
+.demo { min-height: 200px; display: grid; place-items: center; background: #f8f7fb; border-radius: 18px; padding: 28px; overflow: hidden; }
+.item.wide .demo { padding: 20px; overflow-x: auto; place-items: start center; }
+
+/* выбор дат: поля заезда и выезда над пикером */
+.rp-card { background: #fff; border-radius: 22px; padding: 18px 22px 14px; box-shadow: 0 8px 24px rgb(30 20 60 / 0.08); }
+.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.field { padding: 10px 16px; border-radius: 16px; background: #f7f6fa; display: grid; gap: 2px; transition: background 0.3s, box-shadow 0.3s; }
+.field small { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.field b { font-size: 17px; font-weight: 600; }
+.field b.muted { color: #a9a5b3; font-weight: 500; }
+.field.active { background: #fff; box-shadow: inset 0 0 0 2px var(--accent); }
+
+/* магнитная и убегающая кнопки */
+.magnetic, .runaway { border: 0; background: var(--ink); color: #fff; font-weight: 700; padding: 16px 28px; border-radius: 999px; font-size: 16px; box-shadow: 0 10px 24px rgb(27 26 34 / 0.25); }
+.runaway { background: #ff0033; }
+.runaway-area { padding: 120px 160px; }
+
+/* 3D-карточка */
+.tilt { width: 280px; height: 180px; border-radius: 22px; background: linear-gradient(135deg, #6a4cff, #00c2ff); box-shadow: 0 30px 60px rgb(60 40 160 / 0.35); }
+.tilt-face { height: 100%; display: grid; align-content: end; padding: 22px; color: #fff; }
+.tilt-face b { font-size: 24px; }
+
+/* поле пароля */
+.pw { display: grid; justify-items: center; gap: 14px; width: 320px; }
+.pw-field { width: 100%; display: grid; gap: 6px; font-weight: 700; font-size: 13px; color: var(--muted); }
+.pw-field input { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; font: 500 16px "Inter", sans-serif; background: #fff; }
+.pw-meter { display: block; height: 6px; border-radius: 3px; transition: width 0.3s, background 0.3s; }
+
+/* день/ночь */
+.toggle-stage { padding: 40px 60px; border-radius: 18px; background: #bfe3ff; transition: background 0.7s; }
+.toggle-stage.night { background: #1d2340; }
+.toggle { position: relative; display: block; width: 240px; height: 84px; border-radius: 42px; background: #7cc4ff; cursor: pointer; transition: background 0.7s; overflow: hidden; box-shadow: inset 0 4px 10px rgb(0 0 0 / 0.15); }
+.toggle.night { background: #2b3366; }
+.toggle input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.knob { position: absolute; top: 8px; left: 8px; width: 68px; height: 68px; border-radius: 50%; background: gold; transition: transform 0.7s, box-shadow 0.7s, background 0.7s; box-shadow: 0 0 24px rgb(255 200 0 / 0.6); }
+.toggle.night .knob { transform: translateX(156px) rotate(200deg); background: #e8ecf5; box-shadow: inset -24px -14px 0 2px #bec6dc; }
+.stars { position: absolute; inset: 0; opacity: 0; transition: opacity 0.7s; background: radial-gradient(2px 2px at 40px 24px, #fff, transparent), radial-gradient(2px 2px at 80px 54px, #fff, transparent), radial-gradient(1.5px 1.5px at 120px 30px, #fff, transparent), radial-gradient(2px 2px at 60px 64px, #fff, transparent); }
+.toggle.night .stars { opacity: 1; }
+
+@media (max-width: 760px) { .top { flex-direction: column; } .runaway-area { padding: 80px 40px; } }
