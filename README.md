@@ -6,7 +6,7 @@ React components from the [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot) Sho
 
 | Component | Short | Demo | Code |
 |---|---|---|---|
-| [Card → page](#card--page-view-transitions) — the image and title fly into the new page | [▶](https://youtube.com/shorts/uSJSuY8HpK0) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#card) | [`card-transition/`](src/components/card-transition) |
+| [Card → page](#card--page-view-transitions) — the image and title fly into the new page | [▶](https://youtube.com/shorts/-ChwLWTUI4E) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#card) | [`card-transition/`](src/components/card-transition) |
 | [Dynamic Island](#dynamic-island) — one pill becomes a timer, a player and a call | [▶](https://youtube.com/shorts/BJfNxnVbyAA) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#island) | [`dynamic-island/`](src/components/dynamic-island) |
 | [Date range picker](#date-range-picker) — two months, hover preview, presets | [▶](https://youtube.com/shorts/qNPflv57UsI) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#range-picker) | [`range-picker/`](src/components/range-picker) |
 | [Magnetic button](#magnetic-button) — the duel: regular vs magnetic | [▶](https://youtube.com/shorts/38HDRVJWjA8) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#magnetic) | [`MagneticButton.tsx`](src/components/MagneticButton.tsx) |
@@ -32,6 +32,11 @@ import { CardTransition } from "./components/card-transition/CardTransition";
 - The image and the title carry the same `view-transition-name` on the card and on the page. The browser snapshots both states and animates between them.
 - In React the state change runs inside `document.startViewTransition(() => flushSync(update))`, so the new page is already in the DOM when the browser takes the "after" snapshot.
 - Works with stable React 19: no canary `<ViewTransition>` and no libraries. Browsers without the API switch instantly.
+- **Responsive via container queries.** It adapts to the width of its container, not the window: 2 columns on a phone, 3 on a tablet, 4 on desktop. On wide screens the place page splits into image and text. It is checked at 375, 393, 768, 1024, 1280, 1440 and 1920 px with no overflow.
+
+| Phone · tablet | Desktop |
+|---|---|
+| <img src="docs/card-transition-sizes-mobile.png" width="420"> | <img src="docs/card-transition-sizes-desktop.png" width="420"> |
 
 ### Dynamic Island
 

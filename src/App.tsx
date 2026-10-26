@@ -56,14 +56,14 @@ const PLACES: Record<Lang, { title: string; places: Place[]; labels: { back: str
   },
 };
 
-const CardsDemo = ({ lang, animate = true }: { lang: Lang; animate?: boolean }) => (
-  <div className="ct-phone">
+const CardsDemo = ({ lang, animate = true, full = false }: { lang: Lang; animate?: boolean; full?: boolean }) => (
+  <div className={`ct-phone ${full ? "full" : ""}`}>
     <CardTransition heading={PLACES[lang].title} places={PLACES[lang].places} labels={PLACES[lang].labels} animate={animate} />
   </div>
 );
 
 const ITEMS: { id: string; name: L; about: L; short: string; file: string; demo: (lang: Lang) => ReactNode }[] = [
-  { id: "card", name: { ru: "Карточка → страница", en: "Card → page" }, about: { ru: "Картинка и заголовок перелетают на новую страницу. View Transitions API, без библиотек.", en: "The image and title fly into the new page. View Transitions API, no libraries." }, short: "uSJSuY8HpK0", file: "card-transition", demo: (lang) => <Phone><CardsDemo lang={lang} /></Phone> },
+  { id: "card", name: { ru: "Карточка → страница", en: "Card → page" }, about: { ru: "Картинка и заголовок перелетают на новую страницу. View Transitions API, без библиотек.", en: "The image and title fly into the new page. View Transitions API, no libraries." }, short: "-ChwLWTUI4E", file: "card-transition", demo: (lang) => <Phone><CardsDemo lang={lang} /></Phone> },
   { id: "island", name: { ru: "Dynamic Island", en: "Dynamic Island" }, about: { ru: "Капсула превращается в таймер, плеер и звонок. Пружина — CSS linear().", en: "The pill morphs into a timer, a player and a call. The spring is CSS linear()." }, short: "BJfNxnVbyAA", file: "dynamic-island", demo: (lang) => <div className="iphone-frame island-scale"><IslandPhone text={ISLAND[lang]} /></div> },
   { id: "range-picker", name: { ru: "Выбор диапазона дат", en: "Date range picker" }, about: { ru: "Два месяца, подсветка при наведении, лента месяцев, пресеты.", en: "Two months, hover preview, sliding months, presets." }, short: "qNPflv57UsI", file: "range-picker", demo: (lang) => <RangeDemo lang={lang} /> },
   { id: "magnetic", name: { ru: "Магнитная кнопка", en: "Magnetic button" }, about: { ru: "Тянется за курсором и пружинит обратно.", en: "Follows the cursor and springs back." }, short: "38HDRVJWjA8", file: "MagneticButton.tsx", demo: (lang) => <Duel lang={lang} /> },
@@ -140,7 +140,9 @@ export function App() {
   // ?rec=island — экран телефона во всё окно для записи шортса
   // &z=2 — увеличение для чёткой записи (скринкаст пишет в CSS-пикселях)
   // &slowvt — переход в 3 раза медленнее (для slow-mo в ролике)
-  if (q.get("rec") === "card") return <div style={{ zoom: Number(q.get("z") ?? 1) }}>{q.has("slowvt") && <style>{"::view-transition-group(*){animation-duration:1.65s}"}</style>}<CardsDemo lang={lang} animate={!q.has("jump")} /></div>;
+  if (q.get("rec") === "card") return <div style={{ zoom: Number(q.get("z") ?? 1) }}>{q.has("slowvt") && <style>{"::view-transition-group(*){animation-duration:1.65s}"}</style>}<CardsDemo lang={lang} animate={!q.has("jump")} full={q.has("full")} /></div>;
+  // ?view=card — компонент во всё окно (проверка адаптива и скриншоты для README)
+  if (q.get("view") === "card") return <div style={{ minHeight: "100vh", background: "#f4f2f8" }}><CardTransition heading={PLACES[lang].title} places={PLACES[lang].places} labels={PLACES[lang].labels} /></div>;
   if (q.get("rec") === "island") return <div style={{ zoom: Number(q.get("z") ?? 1) }}><IslandPhone text={ISLAND[lang]} /></div>;
   const repo = "https://github.com/ArthurKrantsevich/neuropilot-components/tree/main/src/components/";
   return (

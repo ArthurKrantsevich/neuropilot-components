@@ -20,6 +20,7 @@ export function CardTransition({ places, labels, heading, animate = true }: { pl
   const [open, setOpen] = useState<Place | null>(null);
   if (open)
     return (
+      <div className="ct">
       <article className="ct-page">
         <button className="ct-back" aria-label={labels.back} onClick={() => go(() => setOpen(null), animate)}>
           ←
@@ -35,9 +36,10 @@ export function CardTransition({ places, labels, heading, animate = true }: { pl
           </div>
         </div>
       </article>
+      </div>
     );
   return (
-    <>
+    <div className="ct">
     {heading && <h1 className="ct-h1">{heading}</h1>}
     <div className="ct-grid">
       {places.map((p) => (
@@ -48,7 +50,7 @@ export function CardTransition({ places, labels, heading, animate = true }: { pl
         </button>
       ))}
     </div>
-    </>
+    </div>
   );
 }
 
