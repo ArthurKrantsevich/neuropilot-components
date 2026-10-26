@@ -1,11 +1,12 @@
 # NeuroPilot components · Компоненты из шортсов
 
-React components from the [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot) Shorts. No UI libraries: each component is one file (or one folder) you can copy into your project. Every demo works in Russian and English.
+React components from the [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot) Shorts. No UI libraries (Material You uses Google's color utilities): each component is one file (or one folder) you can copy into your project. Every demo works in Russian and English.
 
 **▶ Live demo:** https://arthurkrantsevich.github.io/neuropilot-components/
 
 | Component | Short | Demo | Code |
 |---|---|---|---|
+| [Material You](#material-you) — one wallpaper color → 29 UI color roles | [▶](https://youtube.com/shorts/D_9AeA0thmY) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#material) | [`material-you/`](src/components/material-you) |
 | [Card → page](#card--page-view-transitions) — the image and title fly into the new page | [▶](https://youtube.com/shorts/-ChwLWTUI4E) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#card) | [`card-transition/`](src/components/card-transition) |
 | [Dynamic Island](#dynamic-island) — one pill becomes a timer, a player and a call | [▶](https://youtube.com/shorts/BJfNxnVbyAA) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#island) | [`dynamic-island/`](src/components/dynamic-island) |
 | [Date range picker](#date-range-picker) — two months, hover preview, presets | [▶](https://youtube.com/shorts/qNPflv57UsI) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#range-picker) | [`range-picker/`](src/components/range-picker) |
@@ -18,6 +19,22 @@ React components from the [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot) Sho
 Styles for each component live in [`src/gallery.css`](src/gallery.css) under a comment with its name (except `card-transition/`, `dynamic-island/` and `range-picker/`, which carry their own CSS).
 
 ---
+
+### Material You
+
+![One wallpaper, the whole UI recolors](docs/material-you.png)
+
+```tsx
+import { MaterialPlayer, rolesFromSeed, cssVars } from "./components/material-you/MaterialYou";
+
+<MaterialPlayer seed="#6750A4" text={…} wallpaper={url} />
+// or just the colors: <div style={cssVars(rolesFromSeed("#F4C430"))}>…uses var(--md-primary)…</div>
+```
+
+- `themeFromSourceColor(seed)` from Google's `@material/material-color-utilities` builds 6 tonal palettes in the HCT color space and 29 color roles: primary, onPrimary, surface, primaryContainer…
+- Every role becomes a CSS variable `--md-*`; the UI is painted only with those variables, so changing one seed recolors everything.
+- Contrast holds for any seed: even from yellow (#F4C430) the button becomes #755B00 with 6.5:1 text contrast. The demo shows the live ratio.
+- The only dependency besides React: `@material/material-color-utilities` (Apache-2.0, by Google).
 
 ### Card → page (View Transitions)
 
@@ -161,6 +178,7 @@ Vite + React 19 + TypeScript. MIT.
 
 React-компоненты из шортсов канала [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot). Без библиотек: каждый лежит в одном файле или папке, можно просто скопировать. Живое демо со всеми компонентами (RU/EN): https://arthurkrantsevich.github.io/neuropilot-components/
 
+- **[Material You](https://arthurkrantsevich.github.io/neuropilot-components/#material)**: один цвет с обоев → 29 цветов интерфейса функцией Google themeFromSourceColor; контраст держится даже у жёлтого.
 - **[Карточка → страница](https://arthurkrantsevich.github.io/neuropilot-components/#card)**: картинка и заголовок перелетают на новую страницу. Это View Transitions API браузера, без библиотек.
 - **[Dynamic Island](https://arthurkrantsevich.github.io/neuropilot-components/#island)**: одна чёрная капсула превращается в таймер, плеер и звонок. Меняются только ширина, высота и скругление, пружина сделана на CSS `linear()`.
 - **[Выбор диапазона дат](https://arthurkrantsevich.github.io/neuropilot-components/#range-picker)**: два месяца рядом, подсветка диапазона при наведении прямо через границу месяцев, месяцы листаются лентой, есть пресеты.

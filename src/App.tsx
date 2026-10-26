@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { day, norm, type D } from "./components/range-picker/dates";
 import { RangePicker, type Range } from "./components/range-picker/RangePicker";
 import { MagneticButton } from "./components/MagneticButton";
@@ -8,6 +8,8 @@ import { ThemeToggle } from "./components/ThemeToggle";
 import { TiltCard } from "./components/TiltCard";
 import { Battery, IslandPhone, Signal, type PhoneText } from "./components/dynamic-island/IslandPhone";
 import { CardTransition, type Place } from "./components/card-transition/CardTransition";
+import { contrast, cssVars, MaterialPlayer, rolesFromSeed, type PlayerText } from "./components/material-you/MaterialYou";
+import { WALLS } from "./components/material-you/wallpapers";
 import { locale, useLang, type Lang } from "./i18n";
 import "./gallery.css";
 
@@ -62,7 +64,58 @@ const CardsDemo = ({ lang, animate = true, full = false }: { lang: Lang; animate
   </div>
 );
 
+const PLAYER: Record<Lang, PlayerText & { pick: string; own: string; ratio: string; palette: string }> = {
+  ru: { app: "Музыка", title: "Северное сияние", artist: "NeuroPilot", chips: ["Для вас", "Новое", "Чарт"], nav: ["Главная", "Плеер", "Медиатека"], pick: "Обои", own: "Свой цвет", ratio: "Контраст текста на кнопке", palette: "29 ролей из одного цвета" },
+  en: { app: "Music", title: "Northern Lights", artist: "NeuroPilot", chips: ["For you", "New", "Charts"], nav: ["Home", "Player", "Library"], pick: "Wallpaper", own: "Your color", ratio: "Text contrast on the button", palette: "29 roles from one color" },
+};
+
+/** Демо Material You: обои → цвет-семя → вся палитра; живой контраст и 29 ролей. */
+function MaterialDemo({ lang }: { lang: Lang }) {
+  const [wall, setWall] = useState(WALLS[0]);
+  const [seed, setSeed] = useState(WALLS[0].seed);
+  const roles = rolesFromSeed(seed);
+  const t = PLAYER[lang];
+  return (
+    <div className="my-demo">
+      <div className="my-phone"><MaterialPlayer seed={seed} text={t} wallpaper={wall.src} /></div>
+      <div className="my-side">
+        <b>{t.pick}</b>
+        <div className="my-walls">
+          {WALLS.map((w) => (
+            <button key={w.id} aria-label={w.name[lang]} aria-pressed={wall.id === w.id} style={{ backgroundImage: `url("${w.src}")` }} onClick={() => { setWall(w); setSeed(w.seed); }} />
+          ))}
+        </div>
+        <label className="my-own">
+          <input type="color" value={seed} onChange={(e) => setSeed(e.target.value)} /> {t.own}
+        </label>
+        <div className="my-ratio">{t.ratio}: <b>{contrast(roles.primary, roles.onPrimary).toFixed(1)}:1</b></div>
+        <div className="my-ratio">{t.palette}</div>
+        <div className="my-swatches">{Object.values(roles).map((c, i) => <i key={i} style={{ background: c }} />)}</div>
+      </div>
+    </div>
+  );
+}
+
+/** Запись для шортса: экран Android 412×915; ?seed=N — статично, ?cycle=мс — смена обоев по кругу. */
+function MaterialRec({ lang }: { lang: Lang }) {
+  const start = Number(q.get("seed") ?? 0);
+  const cycle = Number(q.get("cycle") ?? 0);
+  const [i, setI] = useState(start);
+  useEffect(() => {
+    if (!cycle) return;
+    const id = setInterval(() => setI((v) => (v + 1) % WALLS.length), cycle);
+    return () => clearInterval(id);
+  }, [cycle]);
+  const w = WALLS[i];
+  return (
+    <div className="my-rec" style={cssVars(rolesFromSeed(w.seed))}>
+      <MaterialPlayer seed={w.seed} text={PLAYER[lang]} wallpaper={w.src} />
+    </div>
+  );
+}
+
 const ITEMS: { id: string; name: L; about: L; short: string; file: string; demo: (lang: Lang) => ReactNode }[] = [
+  { id: "material", name: { ru: "Material You: палитра из обоев", en: "Material You: palette from wallpaper" }, about: { ru: "Один цвет → 29 ролей интерфейса. Функция Google themeFromSourceColor, контраст считается сам.", en: "One color → 29 UI roles. Google's themeFromSourceColor, contrast handled for you." }, short: "D_9AeA0thmY", file: "material-you", demo: (lang) => <MaterialDemo lang={lang} /> },
   { id: "card", name: { ru: "Карточка → страница", en: "Card → page" }, about: { ru: "Картинка и заголовок перелетают на новую страницу. View Transitions API, без библиотек.", en: "The image and title fly into the new page. View Transitions API, no libraries." }, short: "-ChwLWTUI4E", file: "card-transition", demo: (lang) => <Phone><CardsDemo lang={lang} /></Phone> },
   { id: "island", name: { ru: "Dynamic Island", en: "Dynamic Island" }, about: { ru: "Капсула превращается в таймер, плеер и звонок. Пружина — CSS linear().", en: "The pill morphs into a timer, a player and a call. The spring is CSS linear()." }, short: "BJfNxnVbyAA", file: "dynamic-island", demo: (lang) => <div className="iphone-frame island-scale"><IslandPhone text={ISLAND[lang]} /></div> },
   { id: "range-picker", name: { ru: "Выбор диапазона дат", en: "Date range picker" }, about: { ru: "Два месяца, подсветка при наведении, лента месяцев, пресеты.", en: "Two months, hover preview, sliding months, presets." }, short: "qNPflv57UsI", file: "range-picker", demo: (lang) => <RangeDemo lang={lang} /> },
@@ -140,6 +193,7 @@ export function App() {
   // ?rec=island — экран телефона во всё окно для записи шортса
   // &z=2 — увеличение для чёткой записи (скринкаст пишет в CSS-пикселях)
   // &slowvt — переход в 3 раза медленнее (для slow-mo в ролике)
+  if (q.get("rec") === "my") return <div style={{ zoom: Number(q.get("z") ?? 1) }}><MaterialRec lang={lang} /></div>;
   if (q.get("rec") === "card") return <div style={{ zoom: Number(q.get("z") ?? 1) }}>{q.has("slowvt") && <style>{"::view-transition-group(*){animation-duration:1.65s}"}</style>}<CardsDemo lang={lang} animate={!q.has("jump")} full={q.has("full")} /></div>;
   // ?view=card — компонент во всё окно (проверка адаптива и скриншоты для README)
   if (q.get("view") === "card") return <div style={{ minHeight: "100vh", background: "#f4f2f8" }}><CardTransition heading={PLACES[lang].title} places={PLACES[lang].places} labels={PLACES[lang].labels} /></div>;
