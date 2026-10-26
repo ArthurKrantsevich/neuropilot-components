@@ -69,8 +69,8 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .tilt-glare { position: absolute; inset: 0; background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgb(255 255 255 / 0.55), transparent 55%); mix-blend-mode: soft-light; pointer-events: none; }
 
 /* ── поле пароля с лицом ── */
-.pw { width: 360px; padding: 26px 26px 22px; border-radius: 30px; background: #fff; box-shadow: var(--shadow); display: grid; gap: 14px; }
-.pw-input { height: 60px; border-radius: 16px; border: 3px solid var(--mood); padding: 0 18px; font: 700 22px "Inter", sans-serif; color: var(--ink); background: #fff; transition: border-color 0.3s; }
+.pw { width: 360px; padding: 26px 26px 22px; border-radius: 30px; background: #fff; box-shadow: var(--shadow); display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.pw-input { width: 100%; min-width: 0; height: 60px; border-radius: 16px; border: 3px solid var(--mood); padding: 0 18px; font: 700 22px "Inter", sans-serif; color: var(--ink); background: #fff; transition: border-color 0.3s; }
 .pw-input::placeholder { color: var(--muted); font-weight: 500; }
 .pw-input:focus { outline: none; }
 .pw-face { width: 170px; height: 170px; justify-self: center; }
