@@ -7,6 +7,7 @@ import { RunawayButton } from "./components/RunawayButton";
 import { ThemeToggle } from "./components/ThemeToggle";
 import { TiltCard } from "./components/TiltCard";
 import { IslandPhone, type PhoneText } from "./components/dynamic-island/IslandPhone";
+import { CardTransition, type Place } from "./components/card-transition/CardTransition";
 import { locale, useLang, type Lang } from "./i18n";
 import "./gallery.css";
 
@@ -32,7 +33,37 @@ const ISLAND: Record<Lang, PhoneText> = {
   en: { title: "Dynamic Island", lead: "One pill: width, height and radius on a spring.", modes: { timer: "Timer", music: "Music", call: "Call" }, hint: "Tap the island to collapse", calling: "Incoming call", caller: "Anna", song: "Northern Lights", artist: "NeuroPilot" },
 };
 
+const PLACES: Record<Lang, { title: string; places: Place[]; labels: { back: string; book: string; nights: string } }> = {
+  ru: {
+    title: "Куда поедем?",
+    labels: { back: "Назад", book: "Забронировать", nights: "7 ночей" },
+    places: [
+      { id: "iceland", title: "Исландия", sub: "Ледники и гейзеры", hue: 200, text: "Чёрные пляжи, водопады и северное сияние прямо над домиком." },
+      { id: "japan", title: "Япония", sub: "Киото осенью", hue: 350, text: "Красные клёны, храмы и тишина садов камней." },
+      { id: "morocco", title: "Марокко", sub: "Сахара и Марракеш", hue: 25, text: "Ночь в пустыне под звёздами и рынки, где пахнет специями." },
+      { id: "norway", title: "Норвегия", sub: "Фьорды", hue: 160, text: "Скалы над водой, паромы и домики рыбаков на сваях." },
+    ],
+  },
+  en: {
+    title: "Where to next?",
+    labels: { back: "Back", book: "Book now", nights: "7 nights" },
+    places: [
+      { id: "iceland", title: "Iceland", sub: "Glaciers and geysers", hue: 200, text: "Black beaches, waterfalls and the northern lights right above your cabin." },
+      { id: "japan", title: "Japan", sub: "Kyoto in autumn", hue: 350, text: "Red maples, temples and the quiet of rock gardens." },
+      { id: "morocco", title: "Morocco", sub: "Sahara and Marrakesh", hue: 25, text: "A night in the desert under the stars and markets that smell of spices." },
+      { id: "norway", title: "Norway", sub: "Fjords", hue: 160, text: "Cliffs over water, ferries and fishermen's huts on stilts." },
+    ],
+  },
+};
+
+const CardsDemo = ({ lang, animate = true }: { lang: Lang; animate?: boolean }) => (
+  <div className="ct-phone">
+    <CardTransition heading={PLACES[lang].title} places={PLACES[lang].places} labels={PLACES[lang].labels} animate={animate} />
+  </div>
+);
+
 const ITEMS: { id: string; name: L; about: L; short: string; file: string; demo: (lang: Lang) => ReactNode }[] = [
+  { id: "card", name: { ru: "Карточка → страница", en: "Card → page" }, about: { ru: "Картинка и заголовок перелетают на новую страницу. View Transitions API, без библиотек.", en: "The image and title fly into the new page. View Transitions API, no libraries." }, short: "jIj0fpT2fFY", file: "card-transition", demo: (lang) => <div className="iphone-frame island-scale"><CardsDemo lang={lang} /></div> },
   { id: "island", name: { ru: "Dynamic Island", en: "Dynamic Island" }, about: { ru: "Капсула превращается в таймер, плеер и звонок. Пружина — CSS linear().", en: "The pill morphs into a timer, a player and a call. The spring is CSS linear()." }, short: "BJfNxnVbyAA", file: "dynamic-island", demo: (lang) => <div className="iphone-frame island-scale"><IslandPhone text={ISLAND[lang]} /></div> },
   { id: "range-picker", name: { ru: "Выбор диапазона дат", en: "Date range picker" }, about: { ru: "Два месяца, подсветка при наведении, лента месяцев, пресеты.", en: "Two months, hover preview, sliding months, presets." }, short: "qNPflv57UsI", file: "range-picker", demo: (lang) => <RangeDemo lang={lang} /> },
   { id: "magnetic", name: { ru: "Магнитная кнопка", en: "Magnetic button" }, about: { ru: "Тянется за курсором и пружинит обратно.", en: "Follows the cursor and springs back." }, short: "38HDRVJWjA8", file: "MagneticButton.tsx", demo: (lang) => <MagneticButton>{lang === "ru" ? "Наведи на меня" : "Hover me"}</MagneticButton> },
@@ -74,6 +105,8 @@ export function App() {
   const [lang, setLang] = useLang();
   // ?rec=island — экран телефона во всё окно для записи шортса
   // &z=2 — увеличение для чёткой записи (скринкаст пишет в CSS-пикселях)
+  // &slowvt — переход в 3 раза медленнее (для slow-mo в ролике)
+  if (q.get("rec") === "card") return <div style={{ zoom: Number(q.get("z") ?? 1) }}>{q.has("slowvt") && <style>{"::view-transition-group(*){animation-duration:1.65s}"}</style>}<CardsDemo lang={lang} animate={!q.has("jump")} /></div>;
   if (q.get("rec") === "island") return <div style={{ zoom: Number(q.get("z") ?? 1) }}><IslandPhone text={ISLAND[lang]} /></div>;
   const repo = "https://github.com/ArthurKrantsevich/neuropilot-components/tree/main/src/components/";
   return (

@@ -6,6 +6,7 @@ React components from the [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot) Sho
 
 | Component | Short | Code |
 |---|---|---|
+| Card → page — the image and title fly into the new page, View Transitions API | [▶](https://youtube.com/shorts/jIj0fpT2fFY) | [`card-transition/`](src/components/card-transition) |
 | Dynamic Island — one pill morphs into a timer, a player and a call; spring via CSS `linear()` | [▶](https://youtube.com/shorts/BJfNxnVbyAA) | [`dynamic-island/`](src/components/dynamic-island) |
 | Date range picker — two months, hover preview, sliding months, presets | [▶](https://youtube.com/shorts/qNPflv57UsI) | [`range-picker/`](src/components/range-picker) |
 | Magnetic button — follows the cursor, springs back | [▶](https://youtube.com/shorts/38HDRVJWjA8) | [`MagneticButton.tsx`](src/components/MagneticButton.tsx) |
@@ -30,6 +31,18 @@ const [range, setRange] = useState<Range>({ start: null, end: null });
 - The solid band is one `::before` per cell — it starts from the middle of the start cell and ends at the middle of the end cell, with rounded ends at week edges.
 - Presets: today, 7 days, 30 days, this month, last month. One month on narrow screens.
 - `lang="ru" | "en"` — month names via `Intl.DateTimeFormat`, the week starts on Monday in RU and Sunday in EN.
+
+### Card → page (View Transitions)
+
+```tsx
+import { CardTransition } from "./components/card-transition/CardTransition";
+
+<CardTransition heading="Where to next?" places={places} labels={{ back: "Back", book: "Book now", nights: "7 nights" }} />
+```
+
+- The image and the title carry the same `view-transition-name` on the card and on the page; the browser snapshots both states and animates between them.
+- In React the state change runs inside `document.startViewTransition(() => flushSync(update))` so the new page is in the DOM when the browser takes the "after" snapshot.
+- Stable React 19 — no canary `<ViewTransition>`, no libraries. Browsers without the API just switch instantly.
 
 ### Dynamic Island
 
@@ -62,6 +75,7 @@ Vite + React 19 + TypeScript. MIT.
 
 React-компоненты из шортсов канала [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot) — без библиотек, каждый в одном файле или папке, можно просто скопировать. Живое демо со всеми компонентами (RU/EN): https://arthurkrantsevich.github.io/neuropilot-components/
 
+- **Карточка → страница** — картинка и заголовок перелетают на новую страницу: View Transitions API браузера, без библиотек.
 - **Dynamic Island** — одна чёрная капсула превращается в таймер, плеер и звонок: меняются только ширина, высота и скругление, пружина — CSS `linear()`.
 - **Выбор диапазона дат** — два месяца рядом, подсветка диапазона при наведении через границу месяцев, лента месяцев листается целиком, пресеты, один месяц на телефоне.
 - **Магнитная кнопка**, **3D-карточка**, **поле пароля с лицом**, **переключатель день/ночь**, **убегающая кнопка «Подписаться»**.
