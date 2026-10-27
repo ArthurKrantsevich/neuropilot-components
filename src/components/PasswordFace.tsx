@@ -1,19 +1,18 @@
 import { useState } from "react";
 
-/** Надёжность пароля 0–3. 1234, qwerty, password — сразу 0. */
-export const strength = (pw: string) => {
-  if (!pw || /^(1234|12345|123456|qwerty|password|пароль)/i.test(pw)) return 0;
-  let s = 0;
-  if (pw.length >= 8) s++;
-  if (pw.length >= 12) s++;
-  if (/[a-z]/.test(pw) && /[A-Z]/.test(pw)) s++;
-  if (/\d/.test(pw)) s++;
-  if (/[^A-Za-z0-9]/.test(pw)) s++;
-  return s <= 1 ? 0 : s === 2 ? 1 : s === 3 ? 2 : 3;
-};
+// самые частые пароли: опасен сам пароль целиком (или с цифрами в конце), а не любой пароль, который с них начинается
+const COMMON = /^(1234\d*|12345\d*|123456\d*|111111|000000|qwerty\d*|йцукен\d*|password\d*|пароль\d*|admin\d*|letmein\d*)$/i;
+const LOWER = /\p{Ll}/u, UPPER = /\p{Lu}/u, DIGIT = /\p{N}/u, SYMBOL = /[^\p{L}\p{N}]/u; // кириллица считается как латиница
 
-/** Пять проверок — те же, что считает strength. */
-export const checks = (pw: string) => [pw.length >= 8, pw.length >= 12, /[a-z]/.test(pw) && /[A-Z]/.test(pw), /\d/.test(pw), /[^A-Za-z0-9]/.test(pw)];
+/** Пять проверок — из них складывается надёжность. */
+export const checks = (pw: string) => [pw.length >= 8, pw.length >= 12, LOWER.test(pw) && UPPER.test(pw), DIGIT.test(pw), SYMBOL.test(pw)];
+
+/** Надёжность пароля 0–3. Частые пароли (1234, qwerty, пароль…) и всё короче 6 символов — 0. */
+export const strength = (pw: string) => {
+  if (pw.length < 6 || COMMON.test(pw) || /^(.)\1+$/.test(pw)) return 0;
+  const s = checks(pw).filter(Boolean).length;
+  return s <= 2 ? 1 : s === 3 ? 2 : 3;
+};
 
 const COLOR = ["#E5484D", "#F08A24", "#E2B93B", "#2FA36B"];
 

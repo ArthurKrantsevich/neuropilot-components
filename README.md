@@ -168,7 +168,8 @@ import { PasswordFace } from "./components/PasswordFace";
 <PasswordFace t={{ placeholder: "Try 1234", empty: "Type a password", moods: ["Awful", "Weak", "Okay", "Strong"], checks: ["8+ characters", "12+ characters", "Aa — mixed case", "Digits", "Symbols !@#"] }} />
 ```
 
-- `strength()` counts five checks: length ≥ 8, length ≥ 12, mixed case, digits and symbols. It turns them into a level from 0 to 3. `1234`, `qwerty` and `password` are always 0.
+- `strength()` counts five checks: length ≥ 8, length ≥ 12, mixed case, digits and symbols, and turns them into a level from 0 to 3 (0–2 checks → 1, 3 → 2, 4–5 → 3). Common passwords (`1234…`, `qwerty`, `password`, `пароль`, with or without trailing digits), one repeated character and anything shorter than 6 are 0. A strong password that merely starts with `1234` is not punished.
+- Letter classes are Unicode-aware (`\p{Lu}`, `\p{Ll}`), so Cyrillic and other scripts count as letters with case, not as symbols.
 - The face is one SVG. The eyes shrink and the mouth goes from an open scream to a smile. On level 0 it shakes and sweats.
 - The input border, the 4-segment meter and the label all share one `--mood` colour.
 
