@@ -152,3 +152,11 @@ body:has(> #root > div > .iphone) { background: #000; }
 .neu-bars em { position: absolute; bottom: 8px; left: 129px; width: 134px; height: 5px; border-radius: 3px; background: #2B3546; }
 .neu-meter { margin: 0; font-size: 15px; color: var(--muted, #5b6068); }
 .neu-meter b.bad { color: #C92A2A; } .neu-meter b.ok { color: #1C7A43; }
+
+/* Необрутализм: страница 840×520 целиком, на узком экране — уменьшенная */
+.brutal-demo { display: grid; gap: 14px; }
+.brutal-count { margin: 0; font-size: 15px; color: var(--muted, #5b6068); }
+.brutal-count b { font-size: 20px; color: var(--ink, #15171c); font-variant-numeric: tabular-nums; }
+.brutal-stage { width: 840px; max-width: 100%; border-radius: 18px; overflow: hidden; box-shadow: 0 0 0 1px rgb(0 0 0 / .08); }
+@media (max-width: 900px) { .brutal-stage { zoom: .8; } }
+@media (max-width: 700px) { .brutal-stage { zoom: .44; max-width: none; } }

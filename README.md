@@ -6,6 +6,7 @@ React components from the [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot) Sho
 
 | Component | Short | Demo | Code |
 |---|---|---|---|
+| [Neubrutalism: 0 blurs, 0 gradients](#neubrutalism-0-blurs-0-gradients) — flat color, a 3px border, a hard 6px 6px 0 shadow; two bright colors | [▶](https://youtube.com/shorts/1uBXlyDk0-I) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#brutal) | [`brutal/`](src/components/brutal) |
 | [Neumorphism: find the buttons](#neumorphism-find-the-buttons) — soft UI with a 1.7:1 edge, and the fix that keeps it soft | [▶](https://youtube.com/shorts/q1_Kw0J78jM) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#neu) | [`neu/`](src/components/neu) |
 | [Bento grid](#bento-grid) — 2 lines of CSS: one hero tile, the eye knows where to look | [▶](https://youtube.com/shorts/6o7kNb_TJIA) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#bento) | [`bento/`](src/components/bento) |
 | [Material You](#material-you) — one wallpaper color → 29 UI color roles | [▶](https://youtube.com/shorts/D_9AeA0thmY) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#material) | [`material-you/`](src/components/material-you) |
@@ -21,6 +22,24 @@ React components from the [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot) Sho
 Styles for each component live in [`src/gallery.css`](src/gallery.css) under a comment with its name (except `card-transition/`, `dynamic-island/` and `range-picker/`, which carry their own CSS).
 
 ---
+
+### Neubrutalism: 0 blurs, 0 gradients
+
+![Soft, neubrutalism, two colors](docs/brutal.png)
+
+```tsx
+import { BrutalShop, SOFT, BRUTAL, TWO_COLORS } from "./components/brutal/Brutal";
+
+<BrutalShop lang="en" st={SOFT} />        // soft SaaS: 6 blurred shadows, 6 gradients
+<BrutalShop lang="en" st={BRUTAL} />      // 0 and 0: flat color, 3px border, 6px 6px 0 #111
+<BrutalShop lang="en" st={TWO_COLORS} />  // two bright colors instead of five
+```
+
+- `st` is continuous (`g`, `s`, `b`, `c` from 0 to 1, plus `press`), so every step can be animated. The demo counts blurs and gradients from the rendered DOM (`getComputedStyle`).
+- `box-shadow: 6px 6px 0 #111`: the third number is the blur radius, and 0 gives a sharp edge ([MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow)).
+- Press: `transform: translate(…)` by the shadow offset plus `box-shadow: none`. The button sits into its shadow, no animation needed.
+- NN/g advises 2–3 bold colors ([Neobrutalism: Definition and Best Practices](https://www.nngroup.com/articles/neobrutalism/)): here yellow for the main button and blue for backgrounds, the rest black and white. Black text on these colors is 8.5–14.7:1; white text fails.
+- Colors change through white, not directly. Yellow → blue in a straight line passes through muddy grey.
 
 ### Neumorphism: find the buttons
 
@@ -220,6 +239,7 @@ Vite + React 19 + TypeScript. MIT.
 
 React-компоненты из шортсов канала [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot). Без библиотек: каждый лежит в одном файле или папке, можно просто скопировать. Живое демо со всеми компонентами (RU/EN): https://arthurkrantsevich.github.io/neuropilot-components/
 
+- **[Необрутализм: 0 размытий, 0 градиентов](https://arthurkrantsevich.github.io/neuropilot-components/#brutal)**: плоский цвет, рамка 3 px и жёсткая тень без размытия; нажатие — кнопка садится в тень; ярких цветов два, не пять (совет NN/g: 2–3).
 - **[Неоморфизм: найди кнопки](https://arthurkrantsevich.github.io/neuropilot-components/#neu)**: кнопка цвета фона и две тени — край 1,7 : 1, кнопки сливаются с плитками. Исправление без потери мягкости: рамка 1 px (3,45 : 1), цвет главной кнопки, плоские плитки.
 - **[Бенто-сетка](https://arthurkrantsevich.github.io/neuropilot-components/#bento)**: две строки CSS — карта `grid-template-areas` буквами и `grid-area` у главной плитки. Одна плитка крупнее — и взгляд знает, куда смотреть; на телефоне меняется только карта.
 - **[Material You](https://arthurkrantsevich.github.io/neuropilot-components/#material)**: один цвет с обоев → 29 цветов интерфейса функцией Google themeFromSourceColor; контраст держится даже у жёлтого.

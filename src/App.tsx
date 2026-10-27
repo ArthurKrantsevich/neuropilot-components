@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useRef, useEffect, useState, type ReactNode } from "react";
 import { day, norm, type D } from "./components/range-picker/dates";
 import { RangePicker, type Range } from "./components/range-picker/RangePicker";
 import { MagneticButton } from "./components/MagneticButton";
@@ -13,6 +13,7 @@ import { WALLS } from "./components/material-you/wallpapers";
 import { Bento } from "./components/bento/Bento";
 import { areasCss, LAYOUTS } from "./components/bento/bento";
 import { NEU_LAYOUT, NeuScreen } from "./components/neu/Neu";
+import { BRUTAL, BrutalShop, SOFT, TWO_COLORS, type BrutalState } from "./components/brutal/Brutal";
 import { locale, useLang, type Lang } from "./i18n";
 import "./gallery.css";
 
@@ -118,6 +119,58 @@ function MaterialRec({ lang }: { lang: Lang }) {
 }
 
 
+/** Необрутализм: мягкий SaaS → плоский цвет, рамка и жёсткая тень → два ярких цвета вместо пяти. Счётчики — по настоящему DOM. */
+function BrutalDemo({ lang }: { lang: Lang }) {
+  const MODES = [SOFT, BRUTAL, TWO_COLORS];
+  const [mode, setMode] = useState(0);
+  const [st, setSt] = useState<BrutalState>(SOFT);
+  const [press, setPress] = useState(0);
+  const [n, setN] = useState({ blur: 0, grad: 0 });
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    let raf = 0;
+    const to = MODES[mode];
+    const tick = () => setSt((f) => {
+      const k = 0.16;
+      const nx = { g: f.g + (to.g - f.g) * k, s: f.s + (to.s - f.s) * k, b: f.b + (to.b - f.b) * k, c: f.c + (to.c - f.c) * k };
+      const done = Math.abs(nx.g - to.g) + Math.abs(nx.s - to.s) + Math.abs(nx.b - to.b) + Math.abs(nx.c - to.c) < 0.004;
+      if (!done) raf = requestAnimationFrame(tick);
+      return done ? { ...to } : nx;
+    });
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode]);
+  // считаем по готовой странице: тени с размытием > 0 и фоны-градиенты
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let blur = 0, grad = 0;
+    el.querySelectorAll<HTMLElement>("*").forEach((x) => {
+      const cs = getComputedStyle(x);
+      if (cs.boxShadow !== "none") for (const part of cs.boxShadow.split(/,(?![^(]*\))/)) { const px = part.match(/(-?[\d.]+)px/g) ?? []; if (parseFloat(px[2] ?? "0") > 0.05) blur++; }
+      if (cs.backgroundImage.includes("gradient") && parseFloat(cs.opacity) > 0.01) grad++;
+    });
+    setN({ blur, grad });
+  }, [st]);
+  const L = lang === "ru"
+    ? { modes: ["Мягко", "Необрутализм", "Два цвета"], blur: "размытий", grad: "градиентов" }
+    : { modes: ["Soft", "Neubrutalism", "Two colors"], blur: "blurs", grad: "gradients" };
+  return (
+    <div className="brutal-demo">
+      <div className="bento-tools">
+        <div className="seg">
+          {L.modes.map((m, i) => <button key={m} className={mode === i ? "on" : ""} onClick={() => setMode(i)}>{m}</button>)}
+        </div>
+        <p className="brutal-count"><b>{n.blur}</b> {L.blur} · <b>{n.grad}</b> {L.grad}</p>
+      </div>
+      <div className="brutal-stage" ref={ref} onPointerDown={() => setPress(1)} onPointerUp={() => setPress(0)} onPointerLeave={() => setPress(0)}>
+        <BrutalShop lang={lang} st={{ ...st, press }} />
+      </div>
+    </div>
+  );
+}
+
 /** Неоморфизм: «найди кнопки». Мягкий экран ↔ исправленный (fix плавно 0 → 1), подсветка кнопок и плиток-обманок. */
 function NeuDemo({ lang }: { lang: Lang }) {
   const [on, setOn] = useState(false);
@@ -191,6 +244,7 @@ function BentoDemo({ lang }: { lang: Lang }) {
 }
 
 const ITEMS: { id: string; name: L; about: L; short: string; file: string; demo: (lang: Lang) => ReactNode }[] = [
+  { id: "brutal", name: { ru: "Необрутализм: 0 размытий, 0 градиентов", en: "Neubrutalism: 0 blurs, 0 gradients" }, about: { ru: "Плоский цвет, рамка 3 px и жёсткая тень 6px 6px 0. Нажатие — кнопка садится в свою тень. Ярких цветов — два, а не пять.", en: "Flat color, a 3px border and a hard 6px 6px 0 shadow. On press the button sits into its shadow. Two bright colors, not five." }, short: "1uBXlyDk0-I", file: "brutal", demo: (lang) => <BrutalDemo lang={lang} /> },
   { id: "neu", name: { ru: "Неоморфизм: найди кнопки", en: "Neumorphism: find the buttons" }, about: { ru: "Кнопки того же цвета, что фон, и две тени: край 1,7 : 1. Рамка в 1 px, цвет главной кнопки и плитки без тени — и мягкость остаётся.", en: "Buttons in the background color with two shadows: the edge is 1.7:1. A 1px border, a colored main button and flat cards keep the softness." }, short: "q1_Kw0J78jM", file: "neu", demo: (lang) => <NeuDemo lang={lang} /> },
   { id: "bento", name: { ru: "Бенто-сетка: 2 строки CSS", en: "Bento grid: 2 lines of CSS" }, about: { ru: "Карта раскладки буквами в grid-template-areas: коллаж, бенто и телефон — одна разметка.", en: "The layout map in grid-template-areas: collage, bento and phone from one markup." }, short: "6o7kNb_TJIA", file: "bento", demo: (lang) => <BentoDemo lang={lang} /> },
   { id: "material", name: { ru: "Material You: палитра из обоев", en: "Material You: palette from wallpaper" }, about: { ru: "Один цвет → 29 ролей интерфейса. Функция Google themeFromSourceColor, контраст считается сам.", en: "One color → 29 UI roles. Google's themeFromSourceColor, contrast handled for you." }, short: "D_9AeA0thmY", file: "material-you", demo: (lang) => <MaterialDemo lang={lang} /> },
