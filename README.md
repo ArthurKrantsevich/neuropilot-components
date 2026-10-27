@@ -6,6 +6,7 @@ React components from the [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot) Sho
 
 | Component | Short | Demo | Code |
 |---|---|---|---|
+| [Neumorphism: find the buttons](#neumorphism-find-the-buttons) — soft UI with a 1.7:1 edge, and the fix that keeps it soft | [▶](https://youtube.com/shorts/q1_Kw0J78jM) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#neu) | [`neu/`](src/components/neu) |
 | [Bento grid](#bento-grid) — 2 lines of CSS: one hero tile, the eye knows where to look | [▶](https://youtube.com/shorts/6o7kNb_TJIA) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#bento) | [`bento/`](src/components/bento) |
 | [Material You](#material-you) — one wallpaper color → 29 UI color roles | [▶](https://youtube.com/shorts/D_9AeA0thmY) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#material) | [`material-you/`](src/components/material-you) |
 | [Card → page](#card--page-view-transitions) — the image and title fly into the new page | [▶](https://youtube.com/shorts/-ChwLWTUI4E) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#card) | [`card-transition/`](src/components/card-transition) |
@@ -20,6 +21,22 @@ React components from the [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot) Sho
 Styles for each component live in [`src/gallery.css`](src/gallery.css) under a comment with its name (except `card-transition/`, `dynamic-island/` and `range-picker/`, which carry their own CSS).
 
 ---
+
+### Neumorphism: find the buttons
+
+![Soft vs fixed, buttons marked](docs/neu.png)
+
+```tsx
+import { NeuScreen } from "./components/neu/Neu";
+
+<NeuScreen lang="en" fix={0} />   // the Dribbble look: 5 buttons, 3 raised tiles that aren't buttons
+<NeuScreen lang="en" fix={1} />   // fixed: still soft, but you can see what to press
+```
+
+- Neumorphism makes a button from the background color (`#E0E5EC`) with two shadows: light top-left, dark bottom-right. The edge is only a shadow: even the shadow color is 1.72:1 against the background.
+- If a button is recognized only by its shape, WCAG 2.1 SC 1.4.11 asks for 3:1 on its edge ([Understanding 1.4.11](https://www.w3.org/WAI/WCAG21/Understanding/non-text-contrast.html)). With contrasting text or a contrasting icon, a border isn't required.
+- The fix (`fix` 0 → 1, animatable): a 1px border `#6B7A90` (3.45:1), color on the main button with white text, flat cards (what can't be pressed shouldn't stick out), icons and labels at 9.6:1 and 5:1.
+- Contrast numbers are computed with the WCAG relative-luminance formula.
 
 ### Bento grid
 
@@ -202,6 +219,7 @@ Vite + React 19 + TypeScript. MIT.
 
 React-компоненты из шортсов канала [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot). Без библиотек: каждый лежит в одном файле или папке, можно просто скопировать. Живое демо со всеми компонентами (RU/EN): https://arthurkrantsevich.github.io/neuropilot-components/
 
+- **[Неоморфизм: найди кнопки](https://arthurkrantsevich.github.io/neuropilot-components/#neu)**: кнопка цвета фона и две тени — край 1,7 : 1, кнопки сливаются с плитками. Исправление без потери мягкости: рамка 1 px (3,45 : 1), цвет главной кнопки, плоские плитки.
 - **[Бенто-сетка](https://arthurkrantsevich.github.io/neuropilot-components/#bento)**: две строки CSS — карта `grid-template-areas` буквами и `grid-area` у главной плитки. Одна плитка крупнее — и взгляд знает, куда смотреть; на телефоне меняется только карта.
 - **[Material You](https://arthurkrantsevich.github.io/neuropilot-components/#material)**: один цвет с обоев → 29 цветов интерфейса функцией Google themeFromSourceColor; контраст держится даже у жёлтого.
 - **[Карточка → страница](https://arthurkrantsevich.github.io/neuropilot-components/#card)**: картинка и заголовок перелетают на новую страницу. Это View Transitions API браузера, без библиотек.

@@ -134,3 +134,21 @@ body:has(> #root > div > .iphone) { background: #000; }
 .bento-check { display: flex; align-items: center; gap: 8px; font-size: 15px; }
 .bento-stage { width: 100%; padding: 14px; box-sizing: border-box; border-radius: 24px; background: #eef1f7; }
 .bento-code { margin: 0; padding: 14px 16px; border-radius: 12px; background: #15171c; color: #d8dbd4; font: 13px/1.6 "JetBrains Mono", ui-monospace, monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+/* Неоморфизм: телефон с экраном 393×852 и метки «кнопка / не кнопка» поверх */
+.neu-demo { display: grid; gap: 14px; justify-items: center; }
+.neu-demo .bento-tools { width: 100%; }
+.neu-phone { width: min(100%, 417px); }
+.neu-frame { position: relative; width: 393px; height: 852px; border-radius: 55px; overflow: hidden; box-shadow: 0 0 0 12px #111, 0 30px 60px rgb(70 45 25 / .3); margin: 12px; zoom: var(--neu-zoom, 1); }
+@media (max-width: 460px) { .neu-frame { --neu-zoom: .78; } }
+.neu-mark { position: absolute; box-sizing: border-box; pointer-events: none; display: grid; place-items: start end; }
+.neu-mark.button { border: 3px solid #E8590C; }
+.neu-mark.button b { margin: -12px -12px 0 0; width: 28px; height: 28px; border-radius: 14px; background: #E8590C; color: #fff; font: 700 15px/28px system-ui, sans-serif; text-align: center; }
+.neu-mark.card { border: 2px dashed #8A96A8; place-items: start center; }
+.neu-mark.card span { margin-top: -13px; padding: 4px 10px; border-radius: 99px; background: #fff; color: #4E5B70; font: 600 13px system-ui, sans-serif; }
+.neu-bars { position: absolute; inset: 0; pointer-events: none; font: 600 17px system-ui, sans-serif; color: #2B3546; }
+.neu-bars span { position: absolute; top: 16px; left: 44px; }
+.neu-bars i { position: absolute; top: 11px; left: 133px; width: 126px; height: 37px; border-radius: 19px; background: #000; }
+.neu-bars em { position: absolute; bottom: 8px; left: 129px; width: 134px; height: 5px; border-radius: 3px; background: #2B3546; }
+.neu-meter { margin: 0; font-size: 15px; color: var(--muted, #5b6068); }
+.neu-meter b.bad { color: #C92A2A; } .neu-meter b.ok { color: #1C7A43; }

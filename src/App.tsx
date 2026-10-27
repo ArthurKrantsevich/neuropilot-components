@@ -12,6 +12,7 @@ import { contrast, cssVars, MaterialPlayer, rolesFromSeed, type PlayerText } fro
 import { WALLS } from "./components/material-you/wallpapers";
 import { Bento } from "./components/bento/Bento";
 import { areasCss, LAYOUTS } from "./components/bento/bento";
+import { NEU_LAYOUT, NeuScreen } from "./components/neu/Neu";
 import { locale, useLang, type Lang } from "./i18n";
 import "./gallery.css";
 
@@ -117,6 +118,50 @@ function MaterialRec({ lang }: { lang: Lang }) {
 }
 
 
+/** Неоморфизм: «найди кнопки». Мягкий экран ↔ исправленный (fix плавно 0 → 1), подсветка кнопок и плиток-обманок. */
+function NeuDemo({ lang }: { lang: Lang }) {
+  const [on, setOn] = useState(false);
+  const [fix, setFix] = useState(0);
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    let raf = 0;
+    const tick = () => setFix((f) => {
+      const n = f + ((on ? 1 : 0) - f) * 0.18;
+      if (Math.abs(n - (on ? 1 : 0)) > 0.005) raf = requestAnimationFrame(tick);
+      return Math.abs(n - (on ? 1 : 0)) > 0.005 ? n : on ? 1 : 0;
+    });
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [on]);
+  const L = lang === "ru"
+    ? { soft: "Как на Dribbble", fixed: "Исправлено", show: "Показать кнопки", edge: "Край кнопки", not: "не кнопка" }
+    : { soft: "Dribbble style", fixed: "Fixed", show: "Show the buttons", edge: "Button edge", not: "not a button" };
+  let n = 0;
+  return (
+    <div className="neu-demo">
+      <div className="bento-tools">
+        <div className="seg">
+          <button className={!on ? "on" : ""} onClick={() => setOn(false)}>{L.soft}</button>
+          <button className={on ? "on" : ""} onClick={() => setOn(true)}>{L.fixed}</button>
+        </div>
+        <label className="bento-check"><input type="checkbox" checked={show} onChange={(e) => setShow(e.target.checked)} /> {L.show}</label>
+      </div>
+      <div className="neu-phone">
+        <div className="neu-frame">
+          <NeuScreen lang={lang} fix={fix} />
+          <div className="neu-bars" aria-hidden="true"><span>9:41</span><i /><em /></div>
+          {show && NEU_LAYOUT.map((e) => (
+            <div key={e.id} className={`neu-mark ${e.kind}`} style={{ left: e.x - 6, top: e.y - 6, width: e.w + 12, height: e.h + 12, borderRadius: e.r + 6 }}>
+              {e.kind === "button" ? <b>{++n}</b> : <span>{L.not}</span>}
+            </div>
+          ))}
+        </div>
+      </div>
+      <p className="neu-meter">{L.edge}: <b className={on ? "ok" : "bad"}>{on ? "3,45 : 1" : "1,7 : 1"}</b> · WCAG 1.4.11 — 3 : 1</p>
+    </div>
+  );
+}
+
 /** Бенто: одна разметка, карта grid-template-areas меняет раскладку. На узком экране — карта для телефона. */
 function BentoDemo({ lang }: { lang: Lang }) {
   const [mode, setMode] = useState<"collage" | "bento">("bento");
@@ -146,6 +191,7 @@ function BentoDemo({ lang }: { lang: Lang }) {
 }
 
 const ITEMS: { id: string; name: L; about: L; short: string; file: string; demo: (lang: Lang) => ReactNode }[] = [
+  { id: "neu", name: { ru: "Неоморфизм: найди кнопки", en: "Neumorphism: find the buttons" }, about: { ru: "Кнопки того же цвета, что фон, и две тени: край 1,7 : 1. Рамка в 1 px, цвет главной кнопки и плитки без тени — и мягкость остаётся.", en: "Buttons in the background color with two shadows: the edge is 1.7:1. A 1px border, a colored main button and flat cards keep the softness." }, short: "q1_Kw0J78jM", file: "neu", demo: (lang) => <NeuDemo lang={lang} /> },
   { id: "bento", name: { ru: "Бенто-сетка: 2 строки CSS", en: "Bento grid: 2 lines of CSS" }, about: { ru: "Карта раскладки буквами в grid-template-areas: коллаж, бенто и телефон — одна разметка.", en: "The layout map in grid-template-areas: collage, bento and phone from one markup." }, short: "6o7kNb_TJIA", file: "bento", demo: (lang) => <BentoDemo lang={lang} /> },
   { id: "material", name: { ru: "Material You: палитра из обоев", en: "Material You: palette from wallpaper" }, about: { ru: "Один цвет → 29 ролей интерфейса. Функция Google themeFromSourceColor, контраст считается сам.", en: "One color → 29 UI roles. Google's themeFromSourceColor, contrast handled for you." }, short: "D_9AeA0thmY", file: "material-you", demo: (lang) => <MaterialDemo lang={lang} /> },
   { id: "card", name: { ru: "Карточка → страница", en: "Card → page" }, about: { ru: "Картинка и заголовок перелетают на новую страницу. View Transitions API, без библиотек.", en: "The image and title fly into the new page. View Transitions API, no libraries." }, short: "-ChwLWTUI4E", file: "card-transition", demo: (lang) => <Phone><CardsDemo lang={lang} /></Phone> },
