@@ -13,6 +13,9 @@ import { WALLS } from "./components/material-you/wallpapers";
 import { Bento } from "./components/bento/Bento";
 import { areasCss, LAYOUTS } from "./components/bento/bento";
 import { NEU_LAYOUT, NeuScreen } from "./components/neu/Neu";
+import { ctaContrast, EraScreen, type Era } from "./components/eras/Eras";
+import sunset from "./components/eras/sunset.jpg";
+import fruit from "./components/eras/fruit.jpg";
 import { ALL, CLAY, ClayApp, ClayButton, contrast as clayContrast, mixHex, type Layers } from "./components/clay/Clay";
 import { BRUTAL, BrutalShop, SOFT, TWO_COLORS, type BrutalState } from "./components/brutal/Brutal";
 import { locale, useLang, type Lang } from "./i18n";
@@ -172,6 +175,57 @@ function BrutalDemo({ lang }: { lang: Lang }) {
   );
 }
 
+/** Три эпохи айфона: один экран «Сегодня» — кожа 2007, плоско 2013, стекло 2025 и правило; Clear / Tinted с живым контрастом. */
+function ErasDemo({ lang }: { lang: Lang }) {
+  const ERAS: Era[] = ["leather", "flat", "glass", "rule"];
+  const [era, setEra] = useState<Era>("leather");
+  const [tinted, setTinted] = useState(false);
+  const [tint, setTint] = useState(0);
+  useEffect(() => {
+    let raf = 0;
+    const to = tinted ? 1 : 0;
+    const tick = () => setTint((f) => {
+      const n = f + (to - f) * 0.18;
+      const done = Math.abs(n - to) < 0.004;
+      if (!done) raf = requestAnimationFrame(tick);
+      return done ? to : n;
+    });
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [tinted]);
+  const L = lang === "ru"
+    ? { eras: ["2007 · кожа", "2013 · плоско", "2025 · стекло", "Правило"], cr: "Контраст подписи кнопки", norm: "норма 4,5 : 1, WCAG 1.4.3", note: { leather: "Кожа, бумага, фетр, гелевая кнопка — объём у всего подряд.", flat: "Всё плоское: кнопка «Новая заметка» — просто синий текст, как подпись.", glass: "Стекло над фото: объём вернулся, но белый текст тонет. Tinted — плотнее.", rule: "Фон плоский, объём — только у того, что нажимается." } }
+    : { eras: ["2007 · leather", "2013 · flat", "2025 · glass", "Rule"], cr: "Button label contrast", norm: "minimum 4.5:1, WCAG 1.4.3", note: { leather: "Leather, paper, felt, a gel button: depth on everything.", flat: "Everything flat: \"New note\" is just blue text, like a label.", glass: "Glass over a photo: depth is back, but white text sinks. Tinted is denser.", rule: "Flat background, depth only for what you press." } };
+  const cr = ctaContrast(tint);
+  const crTxt = cr.toFixed(1).replace(".", lang === "ru" ? "," : ".");
+  return (
+    <div className="eras-demo">
+      <div className="bento-tools">
+        <div className="seg eras-seg">
+          {ERAS.map((e, i) => <button key={e} className={era === e ? "on" : ""} onClick={() => setEra(e)}>{L.eras[i]}</button>)}
+        </div>
+        {era === "glass" && (
+          <div className="seg">
+            <button className={!tinted ? "on" : ""} onClick={() => setTinted(false)}>Clear</button>
+            <button className={tinted ? "on" : ""} onClick={() => setTinted(true)}>Tinted</button>
+          </div>
+        )}
+      </div>
+      <p className="neu-meter">{L.note[era]}{era === "glass" && <> · {L.cr}: <b className={cr >= 4.5 ? "ok" : "bad"}>{crTxt} : 1</b> ({L.norm})</>}</p>
+      <div className="neu-phone">
+        <div className="neu-frame eras-frame">
+          {ERAS.map((e) => (
+            <div key={e} className="eras-layer" style={{ opacity: era === e ? 1 : 0 }}>
+              <EraScreen era={e} lang={lang} tint={tint} photo={sunset} photo2={fruit} hand="Caveat, cursive" ui="Inter, system-ui, sans-serif" />
+            </div>
+          ))}
+          <div className="neu-bars" aria-hidden="true" style={{ color: era === "flat" || era === "rule" ? "#000" : "#fff" }}><span>9:41</span><i /><em style={{ background: era === "flat" || era === "rule" ? "#000" : "#fff" }} /></div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /** Клейморфизм: три тени включаются по одной (каждая плавно), текст — белый (ловушка) или тёмный того же оттенка; контраст считается вживую. */
 function ClayDemo({ lang }: { lang: Lang }) {
   const [on, setOn] = useState<Layers>(ALL);
@@ -298,6 +352,7 @@ function BentoDemo({ lang }: { lang: Lang }) {
 }
 
 const ITEMS: { id: string; name: L; about: L; short: string; file: string; demo: (lang: Lang) => ReactNode }[] = [
+  { id: "eras", name: { ru: "Айфон почти 20 лет по кругу: кожа → плоско → стекло", en: "The iPhone's circle: leather → flat → glass" }, about: { ru: "Один экран в трёх эпохах: скевоморфизм 2007, плоский iOS 7 и Liquid Glass 2025. Плоскую кнопку не узнать, стекло съедает контраст — Tinted его возвращает.", en: "One screen in three eras: 2007 skeuomorphism, flat iOS 7 and 2025 Liquid Glass. A flat button is hard to spot; glass eats contrast, and Tinted brings it back." }, short: "S7m12REY37I", file: "eras", demo: (lang) => <ErasDemo lang={lang} /> },
   { id: "clay", name: { ru: "Клейморфизм: 3 тени на кнопку", en: "Claymorphism: 3 shadows on a button" }, about: { ru: "Пластилиновая кнопка — это три тени: снаружи мягкая, внутри тёмная снизу справа и блик сверху слева. Белый текст на пастели — 1,8 : 1; тёмный того же оттенка — 7,8 : 1.", en: "A clay button is three shadows: a soft outer one, a dark inset at the bottom right and a highlight at the top left. White text on pastel is 1.8:1; a dark shade of the same hue is 7.8:1." }, short: "ot7WmfSWik0", file: "clay", demo: (lang) => <ClayDemo lang={lang} /> },
   { id: "brutal", name: { ru: "Необрутализм: 0 размытий, 0 градиентов", en: "Neubrutalism: 0 blurs, 0 gradients" }, about: { ru: "Плоский цвет, рамка 3 px и жёсткая тень 6px 6px 0. Нажатие — кнопка садится в свою тень. Ярких цветов — два, а не пять.", en: "Flat color, a 3px border and a hard 6px 6px 0 shadow. On press the button sits into its shadow. Two bright colors, not five." }, short: "1uBXlyDk0-I", file: "brutal", demo: (lang) => <BrutalDemo lang={lang} /> },
   { id: "neu", name: { ru: "Неоморфизм: найди кнопки", en: "Neumorphism: find the buttons" }, about: { ru: "Кнопки того же цвета, что фон, и две тени: край 1,7 : 1. Рамка в 1 px, цвет главной кнопки и плитки без тени — и мягкость остаётся.", en: "Buttons in the background color with two shadows: the edge is 1.7:1. A 1px border, a colored main button and flat cards keep the softness." }, short: "q1_Kw0J78jM", file: "neu", demo: (lang) => <NeuDemo lang={lang} /> },

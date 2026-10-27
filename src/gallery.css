@@ -171,3 +171,11 @@ body:has(> #root > div > .iphone) { background: #000; }
 .clay-toggles input { accent-color: #6A4FD8; }
 .clay-stage { width: 100%; box-sizing: border-box; display: grid; place-items: center; padding: 56px 20px 64px; border-radius: 24px; background: #F4EEFF; }
 @media (max-width: 460px) { .clay-stage { padding: 36px 14px 44px; } .clay-demo .neu-frame { --neu-zoom: .64; margin: 10px 0; } }
+
+/* Три эпохи айфона: слои эпох лежат друг на друге и плавно сменяются */
+.eras-demo { display: grid; gap: 14px; justify-items: center; min-width: 0; }
+.eras-demo > * { max-width: 100%; min-width: 0; }
+.eras-demo .bento-tools, .eras-demo .neu-meter { width: 100%; }
+.eras-seg { flex-wrap: wrap; }
+.eras-layer { position: absolute; inset: 0; transition: opacity .45s ease; }
+@media (max-width: 460px) { .eras-demo .neu-frame { --neu-zoom: .64; margin: 10px 0; } }
