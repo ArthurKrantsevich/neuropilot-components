@@ -13,6 +13,7 @@ import { WALLS } from "./components/material-you/wallpapers";
 import { Bento } from "./components/bento/Bento";
 import { areasCss, LAYOUTS } from "./components/bento/bento";
 import { NEU_LAYOUT, NeuScreen } from "./components/neu/Neu";
+import { ALL, CLAY, ClayApp, ClayButton, contrast as clayContrast, mixHex, type Layers } from "./components/clay/Clay";
 import { BRUTAL, BrutalShop, SOFT, TWO_COLORS, type BrutalState } from "./components/brutal/Brutal";
 import { locale, useLang, type Lang } from "./i18n";
 import "./gallery.css";
@@ -171,6 +172,59 @@ function BrutalDemo({ lang }: { lang: Lang }) {
   );
 }
 
+/** Клейморфизм: три тени включаются по одной (каждая плавно), текст — белый (ловушка) или тёмный того же оттенка; контраст считается вживую. */
+function ClayDemo({ lang }: { lang: Lang }) {
+  const [on, setOn] = useState<Layers>(ALL);
+  const [dark, setDark] = useState(true);
+  const [st, setSt] = useState({ ...ALL, ink: 1 });
+  useEffect(() => {
+    let raf = 0;
+    const to = { ...on, ink: dark ? 1 : 0 };
+    const tick = () => setSt((f) => {
+      const k = 0.18;
+      const nx = { outer: f.outer + (to.outer - f.outer) * k, dark: f.dark + (to.dark - f.dark) * k, light: f.light + (to.light - f.light) * k, ink: f.ink + (to.ink - f.ink) * k };
+      const done = Math.abs(nx.outer - to.outer) + Math.abs(nx.dark - to.dark) + Math.abs(nx.light - to.light) + Math.abs(nx.ink - to.ink) < 0.004;
+      if (!done) raf = requestAnimationFrame(tick);
+      return done ? to : nx;
+    });
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [on, dark]);
+  const L = lang === "ru"
+    ? { sh: ["1 · тень снаружи", "2 · тёмная внутри", "3 · блик внутри"], white: "Белый текст", ink: "Тёмный текст", play: "Играть", cr: "Контраст текста", big: "норма для крупного — 3 : 1" }
+    : { sh: ["1 · outer shadow", "2 · dark inset", "3 · inset highlight"], white: "White text", ink: "Dark text", play: "Play", cr: "Text contrast", big: "large-text minimum is 3:1" };
+  const keys = ["outer", "dark", "light"] as const;
+  const c = CLAY.lilac;
+  const cr = clayContrast(mixHex("#FFFFFF", c.ink, dark ? 1 : 0), c.bg);
+  return (
+    <div className="clay-demo">
+      <div className="bento-tools">
+        <div className="clay-toggles">
+          {keys.map((k, i) => (
+            <label key={k} className={on[k] ? "on" : ""}>
+              <input type="checkbox" checked={on[k] > 0} onChange={(e) => setOn({ ...on, [k]: e.target.checked ? 1 : 0 })} /> {L.sh[i]}
+            </label>
+          ))}
+        </div>
+        <div className="seg">
+          <button className={!dark ? "on" : ""} onClick={() => setDark(false)}>{L.white}</button>
+          <button className={dark ? "on" : ""} onClick={() => setDark(true)}>{L.ink}</button>
+        </div>
+      </div>
+      <p className="neu-meter">{L.cr}: <b className={cr >= 4.5 ? "ok" : "bad"}>{cr.toFixed(1).replace(".", lang === "ru" ? "," : ".")} : 1</b> · {L.big}, WCAG 1.4.3</p>
+      <div className="clay-stage">
+        <ClayButton hue="lilac" ink={st.ink} layers={st} r={60} label={L.play} style={{ width: "min(100%, 420px)", height: "clamp(96px, 26vw, 128px)", fontSize: "clamp(34px, 9vw, 46px)" }} />
+      </div>
+      <div className="neu-phone">
+        <div className="neu-frame">
+          <ClayApp lang={lang} ink={st.ink} layers={st} />
+          <div className="neu-bars" aria-hidden="true"><span>9:41</span><i /><em /></div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /** Неоморфизм: «найди кнопки». Мягкий экран ↔ исправленный (fix плавно 0 → 1), подсветка кнопок и плиток-обманок. */
 function NeuDemo({ lang }: { lang: Lang }) {
   const [on, setOn] = useState(false);
@@ -244,6 +298,7 @@ function BentoDemo({ lang }: { lang: Lang }) {
 }
 
 const ITEMS: { id: string; name: L; about: L; short: string; file: string; demo: (lang: Lang) => ReactNode }[] = [
+  { id: "clay", name: { ru: "Клейморфизм: 3 тени на кнопку", en: "Claymorphism: 3 shadows on a button" }, about: { ru: "Пластилиновая кнопка — это три тени: снаружи мягкая, внутри тёмная снизу справа и блик сверху слева. Белый текст на пастели — 1,8 : 1; тёмный того же оттенка — 7,8 : 1.", en: "A clay button is three shadows: a soft outer one, a dark inset at the bottom right and a highlight at the top left. White text on pastel is 1.8:1; a dark shade of the same hue is 7.8:1." }, short: "ot7WmfSWik0", file: "clay", demo: (lang) => <ClayDemo lang={lang} /> },
   { id: "brutal", name: { ru: "Необрутализм: 0 размытий, 0 градиентов", en: "Neubrutalism: 0 blurs, 0 gradients" }, about: { ru: "Плоский цвет, рамка 3 px и жёсткая тень 6px 6px 0. Нажатие — кнопка садится в свою тень. Ярких цветов — два, а не пять.", en: "Flat color, a 3px border and a hard 6px 6px 0 shadow. On press the button sits into its shadow. Two bright colors, not five." }, short: "1uBXlyDk0-I", file: "brutal", demo: (lang) => <BrutalDemo lang={lang} /> },
   { id: "neu", name: { ru: "Неоморфизм: найди кнопки", en: "Neumorphism: find the buttons" }, about: { ru: "Кнопки того же цвета, что фон, и две тени: край 1,7 : 1. Рамка в 1 px, цвет главной кнопки и плитки без тени — и мягкость остаётся.", en: "Buttons in the background color with two shadows: the edge is 1.7:1. A 1px border, a colored main button and flat cards keep the softness." }, short: "q1_Kw0J78jM", file: "neu", demo: (lang) => <NeuDemo lang={lang} /> },
   { id: "bento", name: { ru: "Бенто-сетка: 2 строки CSS", en: "Bento grid: 2 lines of CSS" }, about: { ru: "Карта раскладки буквами в grid-template-areas: коллаж, бенто и телефон — одна разметка.", en: "The layout map in grid-template-areas: collage, bento and phone from one markup." }, short: "6o7kNb_TJIA", file: "bento", demo: (lang) => <BentoDemo lang={lang} /> },

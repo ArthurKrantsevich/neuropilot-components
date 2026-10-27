@@ -160,3 +160,14 @@ body:has(> #root > div > .iphone) { background: #000; }
 .brutal-stage { width: 840px; max-width: 100%; border-radius: 18px; overflow: hidden; box-shadow: 0 0 0 1px rgb(0 0 0 / .08); }
 @media (max-width: 900px) { .brutal-stage { zoom: .8; } }
 @media (max-width: 700px) { .brutal-stage { zoom: .44; max-width: none; } }
+
+/* Клейморфизм: переключатели теней, большая кнопка на лиловом фоне и экран в телефоне */
+.clay-demo { display: grid; gap: 14px; justify-items: center; min-width: 0; }
+.clay-demo > * { max-width: 100%; min-width: 0; }
+.clay-demo .bento-tools, .clay-demo .neu-meter { width: 100%; }
+.clay-toggles { display: flex; flex-wrap: wrap; gap: 8px; }
+.clay-toggles label { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px; border-radius: 12px; background: #eef0f5; font: 600 15px system-ui, sans-serif; color: #555a62; cursor: pointer; }
+.clay-toggles label.on { background: #E6DCFF; color: #2E1F66; }
+.clay-toggles input { accent-color: #6A4FD8; }
+.clay-stage { width: 100%; box-sizing: border-box; display: grid; place-items: center; padding: 56px 20px 64px; border-radius: 24px; background: #F4EEFF; }
+@media (max-width: 460px) { .clay-stage { padding: 36px 14px 44px; } .clay-demo .neu-frame { --neu-zoom: .64; margin: 10px 0; } }

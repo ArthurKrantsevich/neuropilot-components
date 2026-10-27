@@ -6,6 +6,7 @@ React components from the [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot) Sho
 
 | Component | Short | Demo | Code |
 |---|---|---|---|
+| [Claymorphism: 3 shadows on a button](#claymorphism-3-shadows-on-a-button) — outer shadow, dark inset, inset highlight; dark text of the same hue | [▶](https://youtube.com/shorts/ot7WmfSWik0) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#clay) | [`clay/`](src/components/clay) |
 | [Neubrutalism: 0 blurs, 0 gradients](#neubrutalism-0-blurs-0-gradients) — flat color, a 3px border, a hard 6px 6px 0 shadow; two bright colors | [▶](https://youtube.com/shorts/1uBXlyDk0-I) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#brutal) | [`brutal/`](src/components/brutal) |
 | [Neumorphism: find the buttons](#neumorphism-find-the-buttons) — soft UI with a 1.7:1 edge, and the fix that keeps it soft | [▶](https://youtube.com/shorts/q1_Kw0J78jM) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#neu) | [`neu/`](src/components/neu) |
 | [Bento grid](#bento-grid) — 2 lines of CSS: one hero tile, the eye knows where to look | [▶](https://youtube.com/shorts/6o7kNb_TJIA) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#bento) | [`bento/`](src/components/bento) |
@@ -22,6 +23,27 @@ React components from the [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot) Sho
 Styles for each component live in [`src/gallery.css`](src/gallery.css) under a comment with its name (except `card-transition/`, `dynamic-island/` and `range-picker/`, which carry their own CSS).
 
 ---
+
+### Claymorphism: 3 shadows on a button
+
+![Flat button → three shadows with white text (1.8:1) → dark text of the same hue (7.8:1)](docs/clay.png)
+
+```tsx
+import { ClayButton, ClayApp, ALL } from "./components/clay/Clay";
+
+<ClayButton label="Play" hue="lilac" ink={1} />                          // all three shadows, dark text
+<ClayButton label="Play" layers={{ outer: 1, dark: 1, light: 0 }} />     // any shadow at any strength 0–1
+<ClayApp lang="en" ink={1} layers={ALL} />                               // the kids' screen from the Short, 393×852
+```
+
+- One `box-shadow` with three parts, each in its own constant (`SHADOWS`), so you can switch them on one at a time:
+  - `0 18px 36px rgba(60,40,120,.28)`: the soft outer shadow, which lifts the button off the background;
+  - `inset -8px -10px 18px rgba(40,20,90,.28)`: dark inside at the bottom right, which gives it volume;
+  - `inset 8px 10px 16px rgba(255,255,255,.75)`: a highlight inside at the top left, which gives it gloss.
+- Michał Malewicz named the style in 2021 ([Claymorphism in User Interfaces](https://hype4.academy/articles/design/claymorphism-in-user-interfaces)), and he admits it looks "slightly child-like".
+- The trap is white text on pastel: 1.8:1 on lilac `#C9B8FF`, which fails even the 3:1 minimum for large text ([WCAG 1.4.3](https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum)). The fix is a dark color of the same hue: `#2E1F66` gives 7.8:1, and the pastel stays.
+- `ink` goes from 0 to 1 (white → dark), so the text color can be animated. The demo computes the contrast live with the WCAG formula (`contrast()`).
+- Five ready hues: `lilac`, `sky`, `pink`, `mint`, `sun`, each a pastel plus a dark ink of the same hue.
 
 ### Neubrutalism: 0 blurs, 0 gradients
 
@@ -239,6 +261,7 @@ Vite + React 19 + TypeScript. MIT.
 
 React-компоненты из шортсов канала [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot). Без библиотек: каждый лежит в одном файле или папке, можно просто скопировать. Живое демо со всеми компонентами (RU/EN): https://arthurkrantsevich.github.io/neuropilot-components/
 
+- **[Клейморфизм: 3 тени на кнопку](https://arthurkrantsevich.github.io/neuropilot-components/#clay)**: пластилиновая кнопка — одна box-shadow из трёх частей: мягкая снаружи, тёмная внутри снизу справа, блик внутри сверху слева. Ловушка — белый текст на пастели (1,8 : 1); починка — тёмный того же оттенка (7,8 : 1). Тени включаются по одной.
 - **[Необрутализм: 0 размытий, 0 градиентов](https://arthurkrantsevich.github.io/neuropilot-components/#brutal)**: плоский цвет, рамка 3 px и жёсткая тень без размытия; нажатие — кнопка садится в тень; ярких цветов два, не пять (совет NN/g: 2–3).
 - **[Неоморфизм: найди кнопки](https://arthurkrantsevich.github.io/neuropilot-components/#neu)**: кнопка цвета фона и две тени — край 1,7 : 1, кнопки сливаются с плитками. Исправление без потери мягкости: рамка 1 px (3,45 : 1), цвет главной кнопки, плоские плитки.
 - **[Бенто-сетка](https://arthurkrantsevich.github.io/neuropilot-components/#bento)**: две строки CSS — карта `grid-template-areas` буквами и `grid-area` у главной плитки. Одна плитка крупнее — и взгляд знает, куда смотреть; на телефоне меняется только карта.
