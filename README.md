@@ -6,6 +6,7 @@ React components from the [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot) Sho
 
 | Component | Short | Demo | Code |
 |---|---|---|---|
+| [Bento grid](#bento-grid) — 2 lines of CSS: one hero tile, the eye knows where to look | [▶](https://youtube.com/shorts/6o7kNb_TJIA) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#bento) | [`bento/`](src/components/bento) |
 | [Material You](#material-you) — one wallpaper color → 29 UI color roles | [▶](https://youtube.com/shorts/D_9AeA0thmY) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#material) | [`material-you/`](src/components/material-you) |
 | [Card → page](#card--page-view-transitions) — the image and title fly into the new page | [▶](https://youtube.com/shorts/-ChwLWTUI4E) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#card) | [`card-transition/`](src/components/card-transition) |
 | [Dynamic Island](#dynamic-island) — one pill becomes a timer, a player and a call | [▶](https://youtube.com/shorts/BJfNxnVbyAA) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#island) | [`dynamic-island/`](src/components/dynamic-island) |
@@ -19,6 +20,29 @@ React components from the [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot) Sho
 Styles for each component live in [`src/gallery.css`](src/gallery.css) under a comment with its name (except `card-transition/`, `dynamic-island/` and `range-picker/`, which carry their own CSS).
 
 ---
+
+### Bento grid
+
+![Collage vs bento, the map in letters](docs/bento.png)
+
+```tsx
+import { Bento } from "./components/bento/Bento";
+import { LAYOUTS } from "./components/bento/bento";
+
+<Bento layout={LAYOUTS.bento} lang="en" letters />
+```
+
+```css
+.grid { grid-template-areas: "a a b" "a a c" "d e f"; }
+.hero { grid-area: a; }
+@media (width < 600px) { .grid { grid-template-areas: "a a" "b c" "d d" "e f"; } }
+```
+
+- `grid-template-areas` is the layout drawn in letters. Repeat a letter and that tile spans more cells. Areas must be rectangles; `.` is an empty cell ([MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template-areas)).
+- Six equal tiles give the eye nowhere to land. One tile four cells big tells it where to look first: size is a marker of importance ([NN/g](https://www.nngroup.com/articles/visual-hierarchy-ux-definition/)).
+- On a phone only the map changes; the markup stays the same. Tiles are size containers, so text scales with each tile (`cqmin`).
+- Tab and screen readers follow the HTML order, not the picture: keep the hero first in the markup.
+- Works in every browser since 2017 (Chrome 57, Firefox 52, Safari 10.1, Edge 16).
 
 ### Material You
 
@@ -178,6 +202,7 @@ Vite + React 19 + TypeScript. MIT.
 
 React-компоненты из шортсов канала [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot). Без библиотек: каждый лежит в одном файле или папке, можно просто скопировать. Живое демо со всеми компонентами (RU/EN): https://arthurkrantsevich.github.io/neuropilot-components/
 
+- **[Бенто-сетка](https://arthurkrantsevich.github.io/neuropilot-components/#bento)**: две строки CSS — карта `grid-template-areas` буквами и `grid-area` у главной плитки. Одна плитка крупнее — и взгляд знает, куда смотреть; на телефоне меняется только карта.
 - **[Material You](https://arthurkrantsevich.github.io/neuropilot-components/#material)**: один цвет с обоев → 29 цветов интерфейса функцией Google themeFromSourceColor; контраст держится даже у жёлтого.
 - **[Карточка → страница](https://arthurkrantsevich.github.io/neuropilot-components/#card)**: картинка и заголовок перелетают на новую страницу. Это View Transitions API браузера, без библиотек.
 - **[Dynamic Island](https://arthurkrantsevich.github.io/neuropilot-components/#island)**: одна чёрная капсула превращается в таймер, плеер и звонок. Меняются только ширина, высота и скругление, пружина сделана на CSS `linear()`.

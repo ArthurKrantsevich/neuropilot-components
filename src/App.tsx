@@ -10,6 +10,8 @@ import { Battery, IslandPhone, Signal, type PhoneText } from "./components/dynam
 import { CardTransition, type Place } from "./components/card-transition/CardTransition";
 import { contrast, cssVars, MaterialPlayer, rolesFromSeed, type PlayerText } from "./components/material-you/MaterialYou";
 import { WALLS } from "./components/material-you/wallpapers";
+import { Bento } from "./components/bento/Bento";
+import { areasCss, LAYOUTS } from "./components/bento/bento";
 import { locale, useLang, type Lang } from "./i18n";
 import "./gallery.css";
 
@@ -114,7 +116,37 @@ function MaterialRec({ lang }: { lang: Lang }) {
   );
 }
 
+
+/** Бенто: одна разметка, карта grid-template-areas меняет раскладку. На узком экране — карта для телефона. */
+function BentoDemo({ lang }: { lang: Lang }) {
+  const [mode, setMode] = useState<"collage" | "bento">("bento");
+  const [letters, setLetters] = useState(true);
+  const [narrow, setNarrow] = useState(false);
+  useEffect(() => {
+    const f = () => setNarrow(innerWidth < 640);
+    f(); addEventListener("resize", f); return () => removeEventListener("resize", f);
+  }, []);
+  const layout = mode === "collage" ? LAYOUTS.collage : narrow ? LAYOUTS.phone : LAYOUTS.bento;
+  const L = lang === "ru" ? { collage: "Коллаж", bento: "Бенто", letters: "Карта буквами" } : { collage: "Collage", bento: "Bento", letters: "Show the map" };
+  return (
+    <div className="bento-demo">
+      <div className="bento-tools">
+        <div className="seg">
+          <button className={mode === "collage" ? "on" : ""} onClick={() => setMode("collage")}>{L.collage}</button>
+          <button className={mode === "bento" ? "on" : ""} onClick={() => setMode("bento")}>{L.bento}</button>
+        </div>
+        <label className="bento-check"><input type="checkbox" checked={letters} onChange={(e) => setLetters(e.target.checked)} /> {L.letters}</label>
+      </div>
+      <div className="bento-stage" style={{ aspectRatio: narrow ? "3 / 5" : "4 / 3" }}>
+        <Bento layout={layout} lang={lang} letters={letters} />
+      </div>
+      <pre className="bento-code">{`.grid { grid-template-areas: ${areasCss(layout)}; }\n.hero { grid-area: a; }`}</pre>
+    </div>
+  );
+}
+
 const ITEMS: { id: string; name: L; about: L; short: string; file: string; demo: (lang: Lang) => ReactNode }[] = [
+  { id: "bento", name: { ru: "Бенто-сетка: 2 строки CSS", en: "Bento grid: 2 lines of CSS" }, about: { ru: "Карта раскладки буквами в grid-template-areas: коллаж, бенто и телефон — одна разметка.", en: "The layout map in grid-template-areas: collage, bento and phone from one markup." }, short: "6o7kNb_TJIA", file: "bento", demo: (lang) => <BentoDemo lang={lang} /> },
   { id: "material", name: { ru: "Material You: палитра из обоев", en: "Material You: palette from wallpaper" }, about: { ru: "Один цвет → 29 ролей интерфейса. Функция Google themeFromSourceColor, контраст считается сам.", en: "One color → 29 UI roles. Google's themeFromSourceColor, contrast handled for you." }, short: "D_9AeA0thmY", file: "material-you", demo: (lang) => <MaterialDemo lang={lang} /> },
   { id: "card", name: { ru: "Карточка → страница", en: "Card → page" }, about: { ru: "Картинка и заголовок перелетают на новую страницу. View Transitions API, без библиотек.", en: "The image and title fly into the new page. View Transitions API, no libraries." }, short: "-ChwLWTUI4E", file: "card-transition", demo: (lang) => <Phone><CardsDemo lang={lang} /></Phone> },
   { id: "island", name: { ru: "Dynamic Island", en: "Dynamic Island" }, about: { ru: "Капсула превращается в таймер, плеер и звонок. Пружина — CSS linear().", en: "The pill morphs into a timer, a player and a call. The spring is CSS linear()." }, short: "BJfNxnVbyAA", file: "dynamic-island", demo: (lang) => <div className="iphone-frame island-scale"><IslandPhone text={ISLAND[lang]} /></div> },
