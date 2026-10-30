@@ -6,6 +6,7 @@ React components from the [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot) Sho
 
 | Component | Short | Demo | Code |
 |---|---|---|---|
+| [Why links are blue: one link in 5 browsers](#why-links-are-blue-one-link-in-5-browsers) — WorldWideWeb 1990, Mosaic 1993, Netscape, IE and today’s HTML defaults; click to make it visited | Soon | [open](https://arthurkrantsevich.github.io/neuropilot-components/#link-eras) | [`link-eras/`](src/components/link-eras) |
 | [Like button with a rolling counter](#like-button-with-a-rolling-counter) — every digit is a 0–9 column behind a one-line window, like YouTube view counts; only changed digits roll | Sunday | [open](https://arthurkrantsevich.github.io/neuropilot-components/#rolling-like) | [`rolling-like/`](src/components/rolling-like) |
 | [A robot that won't peek at your password](#a-robot-that-wont-peek-at-your-password) — eyes follow the caret, hands cover the screen on the password, one eye peeks on “Show” | Sunday | [open](https://arthurkrantsevich.github.io/neuropilot-components/#peek-login) | [`peek-login/`](src/components/peek-login) |
 | [Telegram-style reactions: 3 animations](#telegram-style-reactions-3-animations) — transfer into the chip, 1.42× activation with a ring, an effect per emoji; no libraries | [▶](https://youtube.com/shorts/LLsAS_6bSJE) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#reactions) | [`reactions/`](src/components/reactions) |
@@ -27,6 +28,22 @@ React components from the [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot) Sho
 Styles for each component live in [`src/gallery.css`](src/gallery.css) under a comment with its name (except `card-transition/`, `dynamic-island/` and `range-picker/`, which carry their own CSS).
 
 ---
+
+### Why links are blue: one link in 5 browsers
+
+The same paragraph with one link, styled as each browser drew it. Click the link and it becomes visited.
+
+```tsx
+import { LinkEras } from "./components/link-eras/LinkEras";
+
+<LinkEras t={{ title: "World Wide Web", read: "Read", link: "more", after: ".", reset: "Reset", notes: { "1990": "…", "1993": "…", "1994": "…", "1995": "…", today: "…" } }} />
+```
+
+- **1990, WorldWideWeb** — black and white; a link is only underlined.
+- **April 12, 1993, NCSA Mosaic 0.13** — the changelog: blue with a solid underline for unvisited, dark purple with a dashed underline for visited.
+- **1994–1995, Netscape and Internet Explorer** — blue links on a grey page, copied from Mosaic.
+- **Today** — the HTML standard's rendering section: `:link { color: #0000EE; }` and `:visited { color: #551A8B; }`.
+- Why blue exactly — nobody wrote it down (Mozilla, “Why are hyperlinks blue?”).
 
 ### Like button with a rolling counter
 
@@ -331,6 +348,7 @@ Vite + React 19 + TypeScript. MIT.
 
 React-компоненты из шортсов канала [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot). Без библиотек: каждый лежит в одном файле или папке, можно просто скопировать. Живое демо со всеми компонентами (RU/EN): https://arthurkrantsevich.github.io/neuropilot-components/
 
+- **[Почему ссылки синие](https://arthurkrantsevich.github.io/neuropilot-components/#link-eras)**: одна ссылка в пяти браузерах — WorldWideWeb 1990 (чёрная, подчёркнутая), Mosaic 0.13 от 12.04.1993 (синяя; посещённая — тёмно-фиолетовая с пунктиром), Netscape и IE, сегодня стандарт HTML: `#0000EE` и `#551A8B`. Нажми на ссылку — станет посещённой.
 - **[Лайк со счётчиком-барабаном](https://arthurkrantsevich.github.io/neuropilot-components/#rolling-like)**: как просмотры на YouTube — каждая цифра это столбик 0–9 в окошке одной строки; столбик едет `translateY(−цифра × 1.2em)` за 0,6 с; крутятся только изменившиеся цифры, справа налево, +60 мс на разряд.
 - **[Робот не подглядывает в пароль](https://arthurkrantsevich.github.io/neuropilot-components/#peek-login)**: глаза Юнита бегут за кареткой в поле почты (±11 px), на поле пароля ладони закрывают экран (0,28 с, с пружинкой), на «Показать» одна ладонь сползает и он подглядывает одним глазом. Только transform.
 - **[Реакции как в Telegram: 3 анимации](https://arthurkrantsevich.github.io/neuropilot-components/#reactions)**: перенос — смайлик почти по прямой падает в плашку (0,12 с); активация — вырастает в 1,42 раза, расходится кольцо; эффект — свой у каждого: сердца, пламя, конфетти. Web Animations API, двигаются только transform и opacity — браузер не пересчитывает раскладку.

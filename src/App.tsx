@@ -21,6 +21,7 @@ import { BRUTAL, BrutalShop, SOFT, TWO_COLORS, type BrutalState } from "./compon
 import { Reactions, type ReactionsText } from "./components/reactions/Reactions";
 import { PeekLogin, type PeekText } from "./components/peek-login/PeekLogin";
 import { RollingLike, type RollingText } from "./components/rolling-like/RollingLike";
+import { LinkEras, type LinkErasText } from "./components/link-eras/LinkEras";
 import { locale, useLang, type Lang } from "./i18n";
 import "./gallery.css";
 
@@ -368,7 +369,22 @@ const ROLL: Record<Lang, RollingText> = {
   en: { like: "Like", liked: "Liked" },
 };
 
+const LE: Record<Lang, LinkErasText> = {
+  ru: { title: "World Wide Web", read: "Читай", link: "дальше", after: " — нажми на ссылку.", reset: "Сбросить «посещённую»", notes: {
+    "1990": "WorldWideWeb на NeXT: чёрно-белый экран, ссылка — просто подчёркнутый текст.",
+    "1993": "12 апреля 1993, Mosaic 0.13: синяя со сплошным подчёркиванием, посещённая — тёмно-фиолетовая с пунктиром.",
+    "1994": "Netscape Navigator повторил Mosaic: синие ссылки на сером фоне.",
+    "1995": "Internet Explorer 1.0 — тоже синие на сером.",
+    today: "Стандарт HTML: :link #0000EE, :visited #551A8B. Почему синий — никто не записал." } },
+  en: { title: "World Wide Web", read: "Read", link: "more", after: " — click the link.", reset: "Reset “visited”", notes: {
+    "1990": "WorldWideWeb on NeXT: black and white, a link is just underlined text.",
+    "1993": "April 12, 1993, Mosaic 0.13: blue with a solid underline, visited dark purple with a dashed one.",
+    "1994": "Netscape Navigator followed Mosaic: blue links on grey.",
+    "1995": "Internet Explorer 1.0 — blue on grey too.",
+    today: "The HTML standard: :link #0000EE, :visited #551A8B. Why blue — nobody wrote it down." } },
+};
 const ITEMS: { id: string; name: L; about: L; short: string; file: string; demo: (lang: Lang) => ReactNode }[] = [
+  { id: "link-eras", name: { ru: "Почему ссылки синие: одна ссылка в 5 браузерах", en: "Why links are blue: one link in 5 browsers" }, about: { ru: "WorldWideWeb 1990 — чёрная подчёркнутая; Mosaic 0.13 (12.04.1993) — синяя, посещённая фиолетовая с пунктиром; Netscape и IE — копии; сегодня стандарт HTML: #0000EE и #551A8B. Нажми на ссылку — станет посещённой.", en: "WorldWideWeb 1990: black and underlined; Mosaic 0.13 (Apr 12, 1993): blue, visited purple and dashed; Netscape and IE copied it; today the HTML standard says #0000EE and #551A8B. Click the link to make it visited." }, short: "", file: "link-eras", demo: (lang) => <LinkEras t={LE[lang]} /> },
   { id: "rolling-like", name: { ru: "Лайк со счётчиком-барабаном", en: "Like button with a rolling counter" }, about: { ru: "Как просмотры на YouTube: каждая цифра — столбик 0–9 в окошке одной строки. Меняется число — столбики сдвигаются (transform), крутятся только изменившиеся цифры, справа налево с задержкой 60 мс.", en: "Like YouTube view counts: each digit is a 0–9 column behind a one-line window. When the number changes the columns slide (transform); only changed digits roll, right to left, 60 ms apart." }, short: "", file: "rolling-like", demo: (lang) => <RollingLike t={ROLL[lang]} /> },
   { id: "peek-login", name: { ru: "Робот не подглядывает в пароль", en: "A robot that won't peek at your password" }, about: { ru: "Форма входа с Юнитом: глаза следят за кареткой в поле почты, на поле пароля он закрывает экран ладонями, на «Показать» — подглядывает одним глазом. Только transform.", en: "A sign-in form with Unit: his eyes follow the caret in the email field, he covers his screen on the password field and peeks with one eye on “Show”. Transform only." }, short: "", file: "peek-login", demo: (lang) => <PeekLogin t={PEEK[lang]} /> },
   { id: "reactions", name: { ru: "Реакции как в Telegram: 3 анимации", en: "Telegram-style reactions: 3 animations" }, about: { ru: "Перенос: смайлик почти по прямой падает в плашку (0,12 с). Активация: вырастает в 1,42 раза, расходится кольцо. Эффект: свой у каждого — сердца, пламя, конфетти. Web Animations API, только transform и opacity.", en: "Transfer: the emoji drops into the chip almost in a straight line (0.12 s). Activation: it grows 1.42× and a ring spreads. Effect: each emoji has its own — hearts, flames, confetti. Web Animations API, only transform and opacity." }, short: "LLsAS_6bSJE", file: "reactions", demo: (lang) => <Reactions text={RX[lang]} /> },
