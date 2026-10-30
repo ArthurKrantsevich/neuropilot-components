@@ -22,6 +22,7 @@ import { Reactions, type ReactionsText } from "./components/reactions/Reactions"
 import { PeekLogin, type PeekText } from "./components/peek-login/PeekLogin";
 import { RollingLike, type RollingText } from "./components/rolling-like/RollingLike";
 import { LinkEras, type LinkErasText } from "./components/link-eras/LinkEras";
+import { HamburgerEras, type HamburgerText } from "./components/hamburger-eras/HamburgerEras";
 import { locale, useLang, type Lang } from "./i18n";
 import "./gallery.css";
 
@@ -383,7 +384,18 @@ const LE: Record<Lang, LinkErasText> = {
     "1995": "Internet Explorer 1.0 — blue on grey too.",
     today: "The HTML standard: :link #0000EE, :visited #551A8B. Why blue — nobody wrote it down." } },
 };
+const HB: Record<Lang, HamburgerText> = {
+  ru: { width: "Ширина страницы", phone: "телефон: три полоски", desktop: "компьютер: меню целиком", menu: "Меню", close: "Закрыть", nav: ["Главная", "Блог", "Цены", "Контакты"], facts: [
+    { year: "1981", text: "Норм Кокс рисует значок для Xerox Star: три строки — как список меню, который он открывает." },
+    { year: "2009", text: "Телефоны: экран маленький, меню прячут за три полоски." },
+    { year: "2016", text: "Nielsen Norman Group: на компьютере спрятанное меню открывают в 27% случаев, видимое — в 48%." } ] },
+  en: { width: "Page width", phone: "phone: three lines", desktop: "desktop: the whole menu", menu: "Menu", close: "Close", nav: ["Home", "Blog", "Pricing", "Contact"], facts: [
+    { year: "1981", text: "Norm Cox draws the icon for the Xerox Star: three lines, like the menu list it opens." },
+    { year: "2009", text: "Phones: small screens, so the menu hides behind three lines." },
+    { year: "2016", text: "Nielsen Norman Group: on desktop a hidden menu is used in 27% of cases, a visible one in 48%." } ] },
+};
 const ITEMS: { id: string; name: L; about: L; short: string; file: string; demo: (lang: Lang) => ReactNode }[] = [
+  { id: "hamburger-eras", name: { ru: "Гамбургер-меню старше веба: 1981", en: "The hamburger menu is older than the web: 1981" }, about: { ru: "Тяни ширину: уже 600 px меню прячется за три полоски, шире — показано целиком. Одно правило @container, без JS для раскладки. Под демо — три остановки истории значка.", en: "Drag the width: below 600px the menu hides behind three lines, wider it's shown in full. One @container rule, no JS for layout. Below the demo: three stops in the icon's history." }, short: "", file: "hamburger-eras", demo: (lang) => <HamburgerEras t={HB[lang]} /> },
   { id: "link-eras", name: { ru: "Почему ссылки синие: одна ссылка в 5 браузерах", en: "Why links are blue: one link in 5 browsers" }, about: { ru: "WorldWideWeb 1990 — чёрная подчёркнутая; Mosaic 0.13 (12.04.1993) — синяя, посещённая фиолетовая с пунктиром; Netscape и IE — копии; сегодня стандарт HTML: #0000EE и #551A8B. Нажми на ссылку — станет посещённой.", en: "WorldWideWeb 1990: black and underlined; Mosaic 0.13 (Apr 12, 1993): blue, visited purple and dashed; Netscape and IE copied it; today the HTML standard says #0000EE and #551A8B. Click the link to make it visited." }, short: "", file: "link-eras", demo: (lang) => <LinkEras t={LE[lang]} /> },
   { id: "rolling-like", name: { ru: "Лайк со счётчиком-барабаном", en: "Like button with a rolling counter" }, about: { ru: "Как просмотры на YouTube: каждая цифра — столбик 0–9 в окошке одной строки. Меняется число — столбики сдвигаются (transform), крутятся только изменившиеся цифры, справа налево с задержкой 60 мс.", en: "Like YouTube view counts: each digit is a 0–9 column behind a one-line window. When the number changes the columns slide (transform); only changed digits roll, right to left, 60 ms apart." }, short: "", file: "rolling-like", demo: (lang) => <RollingLike t={ROLL[lang]} /> },
   { id: "peek-login", name: { ru: "Робот не подглядывает в пароль", en: "A robot that won't peek at your password" }, about: { ru: "Форма входа с Юнитом: глаза следят за кареткой в поле почты, на поле пароля он закрывает экран ладонями, на «Показать» — подглядывает одним глазом. Только transform.", en: "A sign-in form with Unit: his eyes follow the caret in the email field, he covers his screen on the password field and peeks with one eye on “Show”. Transform only." }, short: "", file: "peek-login", demo: (lang) => <PeekLogin t={PEEK[lang]} /> },

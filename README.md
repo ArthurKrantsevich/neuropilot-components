@@ -6,6 +6,7 @@ React components from the [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot) Sho
 
 | Component | Short | Demo | Code |
 |---|---|---|---|
+| [The hamburger menu is older than the web: 1981](#the-hamburger-menu-is-older-than-the-web-1981) — drag the width: below 600px the menu hides behind three lines; one `@container` rule | Soon | [open](https://arthurkrantsevich.github.io/neuropilot-components/#hamburger-eras) | [`hamburger-eras/`](src/components/hamburger-eras) |
 | [Why links are blue: one link in 5 browsers](#why-links-are-blue-one-link-in-5-browsers) — WorldWideWeb 1990, Mosaic 1993, Netscape, IE and today’s HTML defaults; click to make it visited | Soon | [open](https://arthurkrantsevich.github.io/neuropilot-components/#link-eras) | [`link-eras/`](src/components/link-eras) |
 | [Like button with a rolling counter](#like-button-with-a-rolling-counter) — every digit is a 0–9 column behind a one-line window, like YouTube view counts; only changed digits roll | Sunday | [open](https://arthurkrantsevich.github.io/neuropilot-components/#rolling-like) | [`rolling-like/`](src/components/rolling-like) |
 | [A robot that won't peek at your password](#a-robot-that-wont-peek-at-your-password) — eyes follow the caret, hands cover the screen on the password, one eye peeks on “Show” | Sunday | [open](https://arthurkrantsevich.github.io/neuropilot-components/#peek-login) | [`peek-login/`](src/components/peek-login) |
@@ -28,6 +29,21 @@ React components from the [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot) Sho
 Styles for each component live in [`src/gallery.css`](src/gallery.css) under a comment with its name (except `card-transition/`, `dynamic-island/` and `range-picker/`, which carry their own CSS).
 
 ---
+
+### The hamburger menu is older than the web: 1981
+
+One page with a width slider. Below 600px the navigation hides behind three lines and opens as a drawer; wider, the whole menu is shown.
+
+```tsx
+import { HamburgerEras } from "./components/hamburger-eras/HamburgerEras";
+
+<HamburgerEras t={{ width: "Page width", phone: "phone", desktop: "desktop", menu: "Menu", close: "Close", nav: ["Home", "Blog"], facts: [] }} />
+```
+
+- **One rule** — the page is a container (`container-type: inline-size`); `@container (max-width: 599px)` shows the button and hides the nav. No resize listeners.
+- **1981** — Norm Cox drew the icon for the Xerox Star: three lines that look like the menu list it opens.
+- **2009** — phones brought it back: small screens, so the menu hides.
+- **2016** — Nielsen Norman Group: on desktop a hidden menu was used in 27% of cases, a visible one in 48%. Hide it on phones, show it on big screens.
 
 ### Why links are blue: one link in 5 browsers
 
@@ -348,6 +364,7 @@ Vite + React 19 + TypeScript. MIT.
 
 React-компоненты из шортсов канала [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot). Без библиотек: каждый лежит в одном файле или папке, можно просто скопировать. Живое демо со всеми компонентами (RU/EN): https://arthurkrantsevich.github.io/neuropilot-components/
 
+- **[Гамбургер-меню старше веба](https://arthurkrantsevich.github.io/neuropilot-components/#hamburger-eras)**: тяни ширину — уже 600 px меню прячется за три полоски (`@container`), шире — показано целиком. 1981 — Норм Кокс, Xerox Star; 2009 — телефоны; 2016 — NN/g: на компьютере спрятанное меню открывают в 27% случаев, видимое — в 48%.
 - **[Почему ссылки синие](https://arthurkrantsevich.github.io/neuropilot-components/#link-eras)**: одна ссылка в пяти браузерах — WorldWideWeb 1990 (чёрная, подчёркнутая), Mosaic 0.13 от 12.04.1993 (синяя; посещённая — тёмно-фиолетовая с пунктиром), Netscape и IE, сегодня стандарт HTML: `#0000EE` и `#551A8B`. Нажми на ссылку — станет посещённой.
 - **[Лайк со счётчиком-барабаном](https://arthurkrantsevich.github.io/neuropilot-components/#rolling-like)**: как просмотры на YouTube — каждая цифра это столбик 0–9 в окошке одной строки; столбик едет `translateY(−цифра × 1.2em)` за 0,6 с; крутятся только изменившиеся цифры, справа налево, +60 мс на разряд.
 - **[Робот не подглядывает в пароль](https://arthurkrantsevich.github.io/neuropilot-components/#peek-login)**: глаза Юнита бегут за кареткой в поле почты (±11 px), на поле пароля ладони закрывают экран (0,28 с, с пружинкой), на «Показать» одна ладонь сползает и он подглядывает одним глазом. Только transform.
