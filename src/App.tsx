@@ -19,6 +19,8 @@ import fruit from "./components/eras/fruit.jpg";
 import { ALL, CLAY, ClayApp, ClayButton, contrast as clayContrast, mixHex, type Layers } from "./components/clay/Clay";
 import { BRUTAL, BrutalShop, SOFT, TWO_COLORS, type BrutalState } from "./components/brutal/Brutal";
 import { Reactions, type ReactionsText } from "./components/reactions/Reactions";
+import { PeekLogin, type PeekText } from "./components/peek-login/PeekLogin";
+import { RollingLike, type RollingText } from "./components/rolling-like/RollingLike";
 import { locale, useLang, type Lang } from "./i18n";
 import "./gallery.css";
 
@@ -357,7 +359,18 @@ const RX: Record<Lang, ReactionsText> = {
   en: { author: "Unit", message: "Built Telegram-style reactions — without a single library.", time: "18:00", hint: "Tap an emoji. Tap the message to bring the bar back.", me: "U" },
 };
 
+const PEEK: Record<Lang, PeekText> = {
+  ru: { title: "Вход", email: "Почта", password: "Пароль", show: "Показать", hide: "Скрыть", submit: "Войти", done: "Готово ✓" },
+  en: { title: "Sign in", email: "Email", password: "Password", show: "Show", hide: "Hide", submit: "Sign in", done: "Done ✓" },
+};
+const ROLL: Record<Lang, RollingText> = {
+  ru: { like: "Нравится", liked: "Вам нравится" },
+  en: { like: "Like", liked: "Liked" },
+};
+
 const ITEMS: { id: string; name: L; about: L; short: string; file: string; demo: (lang: Lang) => ReactNode }[] = [
+  { id: "rolling-like", name: { ru: "Лайк со счётчиком-барабаном", en: "Like button with a rolling counter" }, about: { ru: "Как просмотры на YouTube: каждая цифра — столбик 0–9 в окошке одной строки. Меняется число — столбики сдвигаются (transform), крутятся только изменившиеся цифры, справа налево с задержкой 60 мс.", en: "Like YouTube view counts: each digit is a 0–9 column behind a one-line window. When the number changes the columns slide (transform); only changed digits roll, right to left, 60 ms apart." }, short: "", file: "rolling-like", demo: (lang) => <RollingLike t={ROLL[lang]} /> },
+  { id: "peek-login", name: { ru: "Робот не подглядывает в пароль", en: "A robot that won't peek at your password" }, about: { ru: "Форма входа с Юнитом: глаза следят за кареткой в поле почты, на поле пароля он закрывает экран ладонями, на «Показать» — подглядывает одним глазом. Только transform.", en: "A sign-in form with Unit: his eyes follow the caret in the email field, he covers his screen on the password field and peeks with one eye on “Show”. Transform only." }, short: "", file: "peek-login", demo: (lang) => <PeekLogin t={PEEK[lang]} /> },
   { id: "reactions", name: { ru: "Реакции как в Telegram: 3 анимации", en: "Telegram-style reactions: 3 animations" }, about: { ru: "Перенос: смайлик почти по прямой падает в плашку (0,12 с). Активация: вырастает в 1,42 раза, расходится кольцо. Эффект: свой у каждого — сердца, пламя, конфетти. Web Animations API, только transform и opacity.", en: "Transfer: the emoji drops into the chip almost in a straight line (0.12 s). Activation: it grows 1.42× and a ring spreads. Effect: each emoji has its own — hearts, flames, confetti. Web Animations API, only transform and opacity." }, short: "LLsAS_6bSJE", file: "reactions", demo: (lang) => <Reactions text={RX[lang]} /> },
   { id: "eras", name: { ru: "Айфон почти 20 лет по кругу: кожа → плоско → стекло", en: "The iPhone's circle: leather → flat → glass" }, about: { ru: "Один экран в трёх эпохах: скевоморфизм 2007, плоский iOS 7 и Liquid Glass 2025. Плоскую кнопку не узнать, стекло съедает контраст — Tinted его возвращает.", en: "One screen in three eras: 2007 skeuomorphism, flat iOS 7 and 2025 Liquid Glass. A flat button is hard to spot; glass eats contrast, and Tinted brings it back." }, short: "S7m12REY37I", file: "eras", demo: (lang) => <ErasDemo lang={lang} /> },
   { id: "clay", name: { ru: "Клейморфизм: 3 тени на кнопку", en: "Claymorphism: 3 shadows on a button" }, about: { ru: "Пластилиновая кнопка — это три тени: снаружи мягкая, внутри тёмная снизу справа и блик сверху слева. Белый текст на пастели — 1,8 : 1; тёмный того же оттенка — 7,8 : 1.", en: "A clay button is three shadows: a soft outer one, a dark inset at the bottom right and a highlight at the top left. White text on pastel is 1.8:1; a dark shade of the same hue is 7.8:1." }, short: "ot7WmfSWik0", file: "clay", demo: (lang) => <ClayDemo lang={lang} /> },
