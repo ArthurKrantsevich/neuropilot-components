@@ -6,6 +6,7 @@ React components from the [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot) Sho
 
 | Component | Short | Demo | Code |
 |---|---|---|---|
+| [Telegram-style reactions: 3 animations](#telegram-style-reactions-3-animations) — transfer into the chip, 1.42× activation with a ring, an effect per emoji; no libraries | [▶](https://youtube.com/shorts/LLsAS_6bSJE) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#reactions) | [`reactions/`](src/components/reactions) |
 | [The iPhone's circle: leather → flat → glass](#the-iphones-circle-leather--flat--glass) — one screen in 2007, 2013 and 2025 skins; Clear / Tinted with live contrast | [▶](https://youtube.com/shorts/S7m12REY37I) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#eras) | [`eras/`](src/components/eras) |
 | [Claymorphism: 3 shadows on a button](#claymorphism-3-shadows-on-a-button) — outer shadow, dark inset, inset highlight; dark text of the same hue | [▶](https://youtube.com/shorts/ot7WmfSWik0) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#clay) | [`clay/`](src/components/clay) |
 | [Neubrutalism: 0 blurs, 0 gradients](#neubrutalism-0-blurs-0-gradients) — flat color, a 3px border, a hard 6px 6px 0 shadow; two bright colors | [▶](https://youtube.com/shorts/1uBXlyDk0-I) | [open](https://arthurkrantsevich.github.io/neuropilot-components/#brutal) | [`brutal/`](src/components/brutal) |
@@ -24,6 +25,21 @@ React components from the [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot) Sho
 Styles for each component live in [`src/gallery.css`](src/gallery.css) under a comment with its name (except `card-transition/`, `dynamic-island/` and `range-picker/`, which carry their own CSS).
 
 ---
+
+### Telegram-style reactions: 3 animations
+
+Tap an emoji: three animations play one after another, built with the Web Animations API (`element.animate`) and no libraries.
+
+```tsx
+import { Reactions } from "./components/reactions/Reactions";
+
+<Reactions text={{ author: "Unit", message: "Built Telegram-style reactions", time: "18:00", hint: "Tap an emoji", me: "U" }} />
+```
+
+- **Transfer** — the emoji drops from the bar into the chip almost in a straight line, 120 ms, `scale(1.15) → scale(.62)`.
+- **Activation** — the emoji in the chip goes `1 → 1.42 → .94 → 1.06 → 1` in 520 ms, a ring spreads `scale(.5) → scale(1.9)` in 420 ms.
+- **Effect** — each emoji has its own, ≈0.9 s: ❤️ hearts float up, 🔥 flames and smoke, 🎉 confetti, others burst in a circle.
+- Only `transform` and `opacity` move, so the browser skips layout and paint ([web.dev: stick to compositor-only properties](https://web.dev/articles/stick-to-compositor-only-properties-and-manage-layer-count)). `prefers-reduced-motion` turns the animations off.
 
 ### The iPhone's circle: leather → flat → glass
 
@@ -283,6 +299,7 @@ Vite + React 19 + TypeScript. MIT.
 
 React-компоненты из шортсов канала [@NeuroP1lot](https://www.youtube.com/@NeuroP1lot). Без библиотек: каждый лежит в одном файле или папке, можно просто скопировать. Живое демо со всеми компонентами (RU/EN): https://arthurkrantsevich.github.io/neuropilot-components/
 
+- **[Реакции как в Telegram: 3 анимации](https://arthurkrantsevich.github.io/neuropilot-components/#reactions)**: перенос — смайлик почти по прямой падает в плашку (0,12 с); активация — вырастает в 1,42 раза, расходится кольцо; эффект — свой у каждого: сердца, пламя, конфетти. Web Animations API, двигаются только transform и opacity — браузер не пересчитывает раскладку.
 - **[Айфон почти 20 лет по кругу: кожа → плоско → стекло](https://arthurkrantsevich.github.io/neuropilot-components/#eras)**: один экран в трёх эпохах — скевоморфизм 2007, плоский iOS 7 и Liquid Glass 2025. Плоскую кнопку не узнать (+22 % времени у NN/g), стекло съедает контраст — Tinted возвращает его; контраст считается вживую. Правило: объём только тому, что нажимается.
 - **[Клейморфизм: 3 тени на кнопку](https://arthurkrantsevich.github.io/neuropilot-components/#clay)**: пластилиновая кнопка — одна box-shadow из трёх частей: мягкая снаружи, тёмная внутри снизу справа, блик внутри сверху слева. Ловушка — белый текст на пастели (1,8 : 1); починка — тёмный того же оттенка (7,8 : 1). Тени включаются по одной.
 - **[Необрутализм: 0 размытий, 0 градиентов](https://arthurkrantsevich.github.io/neuropilot-components/#brutal)**: плоский цвет, рамка 3 px и жёсткая тень без размытия; нажатие — кнопка садится в тень; ярких цветов два, не пять (совет NN/g: 2–3).
